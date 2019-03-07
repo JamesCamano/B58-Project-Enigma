@@ -10,10 +10,10 @@ UofT E-mail Address: james.camano@mail.utoronto.ca
 
 Team Member B
 -------------
-First Name: 
-Last Name:
-Student Number:
-UofT E-mail Address:
+First Name: Jesse
+Last Name: Francispillai
+Student Number: 1003016844
+UofT E-mail Address: jesse.francispillai@mail.utoronto.ca
 
 
 Project Plan
