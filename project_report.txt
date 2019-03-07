@@ -41,17 +41,48 @@ Provide a one paragraph description of your project*:
 	* See extra info section at bottom of document
 
 What is your plan for the first week?
+	- Preparation for Week 1:
+		- Design encryption components*:
+			- "Rotor" (1 for now?)
+			- "Plugboard"
+			- "reflector"
+			- Setting configuration of the "Rotor" and the "Plugboard"
+
+		* Keeping in mind that a reversal algorithm must be readily available.
+		* Initial setting is used to decrypt an encoded message.
+		
+		- Design decryption components:
+			- Based on encryption method.
+			- Require a "teller" word?
+
+	- Week 1: Components of Enigma
+		- Import desired I/O modules.
+			- Keyboard, Text Editor
+		
+		- Modify I/O modules to work for our purposes.
+		- Implement a working version of the Enigma Encoder/Decoder machine.
 
 
 What is your plan for the second week?
+	- Preparation for Week 2:
+		- Debug any malfunctioning components for Enigma
+	
+	- Week 2: Components of Enigma + Bombe machine
 
 
 What is your plan for the third week?
+	- Week 3: Components of Bombe machine
 
 
 What is your backup plan if things don’t work out as planned?
+	1. The Enigma machine consists of multiple modules that make the decryption process harder.
+		- If things do not go as planned, we may:
+		(a) Reduce the number of components, i.e.,
+			- Use fewer rotor components.
+			- Constraining the number of plugboard connections.	 
 
-
+		(b) Simplify the encryption of the machine. This may be done by:
+	  		- Changing the encryption method used.
 
 Weekly Reports
 --------------
