@@ -2,27 +2,13 @@ CSCB58 Project Report: Winter 2019
 
 Team Member A
 -------------
-First Name: 
-Last Name:
-Student Number:
-UofT E-mail Address:
+First Name: James
+Last Name: Camano
+Student Number: 1004457802
+UofT E-mail Address: james.camano@mail.utoronto.ca
 
 
 Team Member B
--------------
-First Name: 
-Last Name:
-Student Number:
-UofT E-mail Address:
-
-Team Member C (Optional)
--------------
-First Name: 
-Last Name:
-Student Number:
-UofT E-mail Address:
-
-Team Member D (Optional)
 -------------
 First Name: 
 Last Name:
@@ -33,7 +19,7 @@ UofT E-mail Address:
 Project Plan
 --------
 
-Project Title: 
+Project Title: Enigma
 
 
 Provide a one paragraph description of your project:
