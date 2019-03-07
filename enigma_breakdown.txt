@@ -1,0 +1,28 @@
+ENIGMA MACHINE BREAKDOWN
+
+A basic version of Enigma Consists of:
+    - Rotors
+    - Plugboard Swtiches
+    - Mirroring 
+    - Text Input
+    - Text Output
+
+
+Note: The state (setting) of the Enigma machine changes (increments) for each key press.
+
+
+Rotors:
+    - Cycle from numbers 1-26, corresponding to letter positions in the alphabet
+    - Each rotor represents a isomorphism of letters unto letters
+        - However, no letter maps to itself (Critical flaw in Enigma design) 
+    - Each rotor increments when the preceding rotor has completed a full cycle.
+
+Plugboard:
+    - Swaps two letters 
+        - (i.e. If A -> M and K -> X originally, then connecting A <-> K will map A -> X and K -> M).
+    - 13 connections available
+
+Mirroring:
+    - circuit is reversed through the rotors.
+
+
