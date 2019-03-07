@@ -22,8 +22,23 @@ Project Plan
 Project Title: Enigma
 
 
-Provide a one paragraph description of your project:
+Provide a one paragraph description of your project*:
+	Project Enigma sets out to imitate both the German "Enigma" text cipher machine and its cryptographic
+	counterpart - the British "Bombe" decoder machine developed during the mid-1940s.
+	
+	Based on its initial settings, the Enigma machine provides a non-surjective mapping for which individual
+	alphabetic characters are mapped to other alphabetic characters. The same initial setting must be used
+	to decrypt encoded messages from Enigma.
 
+	The Bombe decoder recieves an encrypted string from Enigma and outputs the Enigma setting for which the message
+	is decoded.
+ 
+	Enigma consists of two components: 
+		(1) A multi-stage* programmable text encryptor/decryptor device, and
+		(2) A string-setting decryptor device.
+
+
+	* See extra info section at bottom of document
 
 What is your plan for the first week?
 
@@ -63,3 +78,6 @@ Repo & Video
 ------------
 <At the end of the project, provide links to your code repository and presentation video (and passwords if not public>
 
+EXTRA INFO (may or may not add to description):
+		- state changes with every input (extra complexity with developing enigma, bombe)
+		- no letter is ever mapped to itself
