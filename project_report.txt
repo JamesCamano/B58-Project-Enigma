@@ -35,14 +35,17 @@ Provide a one paragraph description of your project*:
  
 	Enigma consists of two components: 
 		(1) A multi-stage* programmable text encryptor/decryptor device, and
-		(2) A string-setting decryptor device.
+		(2) A string-to-initial setting decryptor device.
 
 
 	* See extra info section at bottom of document
 
 What is your plan for the first week?
 	- Preparation for Week 1:
-		- Design encryption components*:
+		- Design encryption algorithm*
+		- Design decryption algorithm*
+
+		- Design encryption components, based on encryption algorithm:
 			- "Rotor" (1 for now?)
 			- "Plugboard"
 			- "reflector"
@@ -61,13 +64,22 @@ What is your plan for the first week?
 		
 		- Modify I/O modules to work for our purposes.
 		- Implement a working version of the Enigma Encoder/Decoder machine.
+			- Display rotor positions on LEDR
+			- Display plugboard connections on ____
 
 
 What is your plan for the second week?
 	- Preparation for Week 2:
-		- Debug any malfunctioning components for Enigma
+		ENIGMA
+			- Debug any malfunctioning components for the Enigma Machine
+
+		BOMBE
+			- Implement decoder circuit, based on decryption algorithm.
 	
-	- Week 2: Components of Enigma + Bombe machine
+	- Week 2: Components of Enigma, Components of Bombe machine
+		- Finalise creation of Enigma
+		- Create modules for Bombe machine algorithm
+
 
 
 What is your plan for the third week?
