@@ -87,6 +87,7 @@ What is your plan for the second week?
 
 What is your plan for the third week?
 	- Week 3: Components of Bombe machine
+		- Create circuit of the Bombe machine
 
 
 What is your backup plan if things don’t work out as planned?
