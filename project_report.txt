@@ -24,13 +24,15 @@ Project Title: Enigma
 
 Provide a one paragraph description of your project*:
 	Project Enigma sets out to imitate both the German "Enigma" text cipher machine and its cryptographic
-	counterpart - the British "Bombe" decoder machine developed during the mid-1940s.
+	counterpart - the British "Bombe" decoder machine developed during the mid-1940s. The Enigma machine
+	was most notable for being used by the Nazi Germany military during World War II to send encrypted messages, 
+	And the "Bombe", designed in 1938 was designed to break these ciphers.
 	
 	Based on its initial settings, the Enigma machine provides a non-surjective mapping for which individual
 	alphabetic characters are mapped to other alphabetic characters. The same initial setting must be used
 	to decrypt encoded messages from Enigma.
 
-	The Bombe decoder recieves an encrypted string from Enigma and outputs the Enigma setting for which the message
+	The Bombe decoder receives an encrypted string from Enigma and outputs the Enigma setting for which the message
 	is decoded.
  
 	Enigma consists of two components: 
@@ -72,12 +74,13 @@ What is your plan for the second week?
 	- Preparation for Week 2:
 		ENIGMA
 			- Debug any malfunctioning components for the Enigma Machine
+			parts including the rotor, plugboard, and reflector. 
 
 		BOMBE
 			- Implement decoder circuit, based on decryption algorithm.
 	
 	- Week 2: Components of Enigma, Components of Bombe machine
-		- Finalise creation of Enigma
+		- Finalize creation of Enigma
 		- Create modules for Bombe machine algorithm
 
 
