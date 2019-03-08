@@ -1,0 +1,4 @@
+=== ENCRYPTION ALGORITHM ===
+
+This file details the encryption algorithm that our version of
+Engima will use.
