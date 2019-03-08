@@ -26,13 +26,10 @@ Provide a one paragraph description of your project*:
 	Project Enigma sets out to imitate both the German "Enigma" text cipher machine and its cryptographic
 	counterpart - the British "Bombe" decoder machine developed during the mid-1940s. The Enigma machine
 	was most notable for being used by the Nazi Germany military during World War II to send encrypted messages, 
-	And the "Bombe", designed in 1938 was designed to break these ciphers.
-	
-	Based on its initial settings, the Enigma machine provides a non-surjective mapping for which individual
-	alphabetic characters are mapped to other alphabetic characters. The same initial setting must be used
-	to decrypt encoded messages from Enigma.
-
-	The Bombe decoder receives an encrypted string from Enigma and outputs the Enigma setting for which the message
+	And the "Bombe", designed in 1938 was designed to break these ciphers. Based on its initial settings,
+	the Enigma machine provides a non-surjective mapping for which individual alphabetic characters are
+	mapped to other alphabetic characters. The same initial setting must be used to decrypt encoded messages from Enigma.
+	The Bombe decoder receives an encrypted string (flag) from Enigma and outputs the Enigma setting for which the message
 	is decoded.
  
 	Enigma consists of two components: 
@@ -46,19 +43,27 @@ What is your plan for the first week?
 	- Preparation for Week 1:
 		- Design encryption algorithm*
 		- Design decryption algorithm*
+			- Define "rules" to play by: things that must always be true
 
 		- Design encryption components, based on encryption algorithm:
+			- FSM: State switch per button press.
+			- Memory: (Related to above)
+			- Arithmetic: Switching letters 
+
 			- "Rotor" (1 for now?)
 			- "Plugboard"
 			- "reflector"
 			- Setting configuration of the "Rotor" and the "Plugboard"
 
+			- word flags!
+			
 		* Keeping in mind that a reversal algorithm must be readily available.
 		* Initial setting is used to decrypt an encoded message.
 		
 		- Design decryption components:
 			- Based on encryption method.
-			- Require a "teller" word?
+			- Require a word flag.
+			- Create a failsafe checker.
 
 	- Week 1: Components of Enigma
 		- Import desired I/O modules.
@@ -67,33 +72,46 @@ What is your plan for the first week?
 		- Modify I/O modules to work for our purposes.
 		- Implement a working version of the Enigma Encoder/Decoder machine.
 			- Display rotor positions on LEDR
-			- Display plugboard connections on ____
+			- Display output on screen.
+			- (If algorithm allows, Display plugboard connections on HEX)
 
 
 What is your plan for the second week?
 	- Preparation for Week 2:
 		ENIGMA
+			- Determine if more / less components need to be added.
 			- Debug any malfunctioning components for the Enigma Machine
 			parts including the rotor, plugboard, and reflector. 
 
 		BOMBE
 			- Implement decoder circuit, based on decryption algorithm.
+				- FSM for decoder machine (based on process of elimination / brute force?)
+				- Memory Unit: Valid states
+				- Arithmetic Unit: Possible state elimination / state switch
 	
 	- Week 2: Components of Enigma, Components of Bombe machine
 		- Finalize creation of Enigma
 		- Create modules for Bombe machine algorithm
-
-
+			- Input: Keyboard
+			- Output: LEDR (Rotors)
+			- 		  HEX  (Plugboard, again, if time permits)
+		
+		- Connect functionalities of Enigma and Bombe by a Mux
 
 What is your plan for the third week?
+	- Preparation for Week 3:
+		- Debug Bombe machine.
+
 	- Week 3: Components of Bombe machine
-		- Create circuit of the Bombe machine
+		- Refine circuit of the Enigma and Bombe machine
+		- Debug and verify functionality.
 
 
 What is your backup plan if things don’t work out as planned?
+
 	1. The Enigma machine consists of multiple modules that make the decryption process harder.
 		- If things do not go as planned, we may:
-		(a) Reduce the number of components, i.e.,
+		(a) Reduce the number of components, i.e.:
 			- Use fewer rotor components.
 			- Constraining the number of plugboard connections.	 
 
