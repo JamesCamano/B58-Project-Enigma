@@ -1,0 +1,67 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\setlength\parindent{0pt}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
+\usepackage{blindtext}
+\newcommand{\lastedited}[1]{(\textbf{Last Edited - \today{}}: \emph{#1})}
+
+\title{CSC B58: Enigma Breakdown}
+\date{\today}
+\author{James Camano}
+
+\begin{document}
+	\maketitle
+	\lastedited{Began documentation of Enigma} \\ \\
+	This document sets out to describe the components of the Enigma machine. \\
+	\section{Introduction}
+ 	Project Enigma sets out to imitate both the German \emph{Enigma} text cipher machine.  \\
+
+	This imitation of Enigma (which will henceforth be called the same name) creates a cipher of a character input by starting off with an initial set state, performing \emph{alphabet shift arithmetic} to the character input based on that state and then `advancing' the state. Finally, this shifted input is returned as output.
+	
+	\section{Components}
+	Enigma consists of:
+
+	\begin{enumerate}
+		\item A set of rotors ${\{R^i\}}_{i=1}^{n}$, whose values cycle from $0-25$ \footnote{Currently, $n=1$. }. 
+	\end{enumerate}
+
+	\section{Encryption Algorithm}
+	Define:
+		\begin{itemize}
+			\item The alphabet $\Sigma = \{\bar{a}: \bar{a} \text{ is a character in the English alphabet} \}$
+			\item $R_n$ to be a rotor with setting $n$. That is, $R_n$'s value is $n$
+			\item $\varphi_k \in \Sigma$ to be the $k$\textsuperscript{th} letter in the alphabet. (i.e. $\varphi_1 = b$ )
+
+			\item $g(R_n) = \begin{cases}
+					& R_{n+1} \text{, if } {n+1} \leq 25 \\
+				      & R_0 \text{, if }{n+1} > 25
+				  \end{cases} $
+   
+			
+			\item $f(\varphi_k, R_n) =$ 
+					$ 
+					\begin{cases} 
+						&\varphi_{k+n} \text{, if } {k+n} \leq 25 \\
+						&\varphi_{k+n-26} \text{, if }{k+n} > 25
+					\end{cases}
+					$ 
+		\end{itemize}
+	
+
+	Then, the encryption algorithm is as follows:
+	
+	\begin{enumerate}
+		\item $\omega := f(\varphi_k, R_n)$
+		\item $R_n := g(R_n)$
+	\end{enumerate}
+
+	Where $\varphi_k$ is assumed to be the input letter, and $\omega$ is the corresponding output of the Enigma machine. 
+
+	\section{Decryption Algorithm}
+	\blindtext
+\end{document}
+
