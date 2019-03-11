@@ -15,7 +15,13 @@
 
 \begin{document}
 	\maketitle
-	\lastedited{Began documentation of Enigma} \\ \\
+	\lastedited{}
+	\begin{itemize}
+		\item Restricted $\Sigma$ to be the collection of English uppercase characters.
+		\item Added Enigma Decryption method.
+		\item Started Input Restrictions section.
+	\end{itemize}
+
 	This document sets out to describe the components of the Enigma machine. \\
 	\section{Introduction}
  	Project Enigma sets out to imitate both the German \emph{Enigma} text cipher machine.  \\
@@ -32,7 +38,7 @@
 	\section{Encryption Algorithm}
 	Define:
 		\begin{itemize}
-			\item The alphabet $\Sigma = \{\bar{a}: \bar{a} \text{ is a character in the English alphabet} \}$
+			\item The alphabet $\Sigma = \{\bar{a}: \bar{a} \text{ is an uppercase character in the English alphabet} \}$
 			\item $R_n$ to be a rotor with setting $n$. That is, $R_n$'s value is $n$
 			\item $\varphi_k \in \Sigma$ to be the $k$\textsuperscript{th} letter in the alphabet. (i.e. $\varphi_1 = b$ )
 
@@ -59,9 +65,43 @@
 		\item $R_n := g(R_n)$
 	\end{enumerate}
 
-	Where $\varphi_k$ is assumed to be the input letter, and $\omega$ is the corresponding output of the Enigma machine. 
+	Where $\varphi_k$ is assumed to be the \emph{input} letter, and $\omega$ is the corresponding output of the Enigma machine. \\
+	
+	In words, given the input letter $\varphi_k$, Enigma shfits $\varphi_k$ the rotor position of $R_n$, subsequently incrementing $R_n$ by one and then outputting the shifted letter $\omega$.
 
 	\section{Decryption Algorithm}
-	\blindtext
+
+	\newcommand{\fhat}{\hat{f}}
+	Let the settings of the Enigma machine be similar to that in the encryption algorithm (i.e. If the starting position was $R_3$, then set the starting position to $R_3$.) Then, define:
+
+	 \begin{itemize}
+		\item $\fhat: (\Sigma \times R) \mapsto \Sigma$ 
+		\item $\fhat(\varphi_k, R_n)= 					
+					\begin{cases} 
+						&\varphi_{k-n} \text{, if } {k-n} \geq 0 \\
+						&\varphi_{k-n+26} \text{, if }{k+n} < 0
+					\end{cases}
+			  $ 
+	\end{itemize}
+
+	Then, the decryption algorithm is:
+	
+
+	\begin{enumerate}
+		\item $\omega := \fhat(\varphi_k, R_n)$
+		\item $R_n := g(R_n)$
+	\end{enumerate}
+
+	Where $\varphi_k$ is assumed to be the \emph{encrypted} letter, and $\omega$ is the corresponing original input of the Enigma machine (but $\omega$ is what is outputted). This method is intuitively straightforward since the subscript subtraction represents a shift of the same magnitude in the same direction. \\
+
+	
+
+	\section{Input Restrictions on Enigma}
+	These restrictions are applied for the convenience of the Bombe machine.
+
+	\begin{enumerate}
+		\item Every input sequence to be encoded must start with the sequence $\langle A, B, C \rangle$.
+		This is so that there is a definite (easy) flag for which the Bombe machine can deduce a contradiction.
+	\end{enumerate}
 \end{document}
 
