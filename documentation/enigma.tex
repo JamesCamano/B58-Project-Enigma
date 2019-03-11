@@ -7,7 +7,7 @@
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 
 \usepackage{blindtext}
-\newcommand{\lastedited}[1]{(\textbf{Last Edited - \today{}}: \emph{#1})}
+\newcommand{\lastedited}{(\textbf{Last Edited - \today{}})}
 
 \title{CSC B58: Enigma Breakdown}
 \date{\today}
@@ -15,16 +15,16 @@
 
 \begin{document}
 	\maketitle
-	\lastedited{}
+	\lastedited
 	\begin{itemize}
-		\item Restricted $\Sigma$ to be the collection of English uppercase characters.
-		\item Added Enigma Decryption method.
-		\item Started Input Restrictions section.
+		\item typo fixes
+		\item edited intro 
+		\item added additional notes section
 	\end{itemize}
 
 	This document sets out to describe the components of the Enigma machine. \\
 	\section{Introduction}
- 	Project Enigma sets out to imitate both the German \emph{Enigma} text cipher machine.  \\
+ 	Project Enigma sets out to imitate both the German \emph{Enigma} text cipher machine, and its mechanical counterpart - the Bombe machine.  \\
 
 	This imitation of Enigma (which will henceforth be called the same name) creates a cipher of a character input by starting off with an initial set state, performing \emph{alphabet shift arithmetic} to the character input based on that state and then `advancing' the state. Finally, this shifted input is returned as output.
 	
@@ -92,7 +92,7 @@
 		\item $R_n := g(R_n)$
 	\end{enumerate}
 
-	Where $\varphi_k$ is assumed to be the \emph{encrypted} letter, and $\omega$ is the corresponing original input of the Enigma machine (but $\omega$ is what is outputted). This method is intuitively straightforward since the subscript subtraction represents a shift of the same magnitude in the opposite direction. \\
+	Where $\varphi_k$ is assumed to be the \emph{encrypted} letter, and $\omega$ is the corresponding original input of the Enigma machine (but $\omega$ is what is outputted). This method is intuitively straightforward since the subscript subtraction represents a shift of the same magnitude in the opposite direction. \\
 
 	
 
@@ -102,6 +102,18 @@
 	\begin{enumerate}
 		\item Every input sequence to be encoded must start with the sequence $\langle A, B, C \rangle$.
 		This is so that there is a definite (easy) flag for which the Bombe machine can deduce a contradiction.
+		
 	\end{enumerate}
+	
+			
+	\section{Additional Notes}
+		\begin{itemize}
+			\item What will the output look like if we introduce a second rotor? A third?
+			
+			\begin{itemize}
+				\item Shift terms will be of the form $x_1 + x_2 + r_1 + r_2$, where $x_1, x_2$ are the initial positions; $r_1, r_2$ are the number of shifts $\bmod{ 26}$ of the first and second rotor - respectively.
+			\end{itemize}					
+			
+		\end{itemize}
 \end{document}
 
