@@ -27,7 +27,7 @@ module letter_overflow_comparator(
   wire overflow_Z;
 */
   // convenient constants
-  localparam LETTER_A = 7'd65, LETTER_B = 7'd90;
+  localparam LETTER_A = 7'd65, LETTER_Z = 7'd90;
   localparam true = 1'b1, false = 1'b0;
   
   /*
@@ -35,7 +35,7 @@ module letter_overflow_comparator(
   */
   always@(*)
   begin
-    if(NCTV < LETTER_A) // underflow condition.
+    if(NTCV < LETTER_A) // underflow condition.
       NTCV_underflow <= true;
     else
       NTCV_underflow <= false;
@@ -43,7 +43,7 @@ module letter_overflow_comparator(
 
   always@(*)
   begin
-    if(NCTV > LETTER_Z) // underflow condition.
+    if(NTCV > LETTER_Z) // underflow condition.
       NTCV_overflow <= true;
     else
       NTCV_overflow <= false;

@@ -20,36 +20,71 @@
   based on clk.
 */
 module rotor_0_25(
-  output reg [6:0] rotor_out,   // 7-bit representation
+  output reg [6:0] rotor_out,   // 7-bit representation. note -always non-negative
   input clk,                    // sync incrementer
   input load_init_state,        // async set
   input [4:0] rotor_init_state
   );
-
+  
   localparam TWO_BIT_SIGN_EXT = 2'b00;
   localparam DEFAULT_VALUE = 7'd0;
   localparam BEGINNING_VALUE = 7'd0, END_VALUE = 7'd25;
   localparam ONE = 7'd1;
 
-  always@(load_init_state) // always when load_init_state changes - or always@(*)
-  begin: reset
-    if (load_init_state == 1'b1)
-      begin: check_invalid
-        if (load_init_state > END_VALUE)                   // if past 7'd25 
-          rotor_out <= DEFAULT_VALUE;                      // set to default
-        else
-          rotor_out <= {TWO_BIT_SIGN_EXT, rotor_init_state}; // set to inital state
-      end // check_invalid
-  end
-
-  // NOTE: what happens if user just presses wihout
-  // setting?
-  always@(posedge clk) // clock has incremented.
-  begin: increment
-    rotor_out <= rotor_out + ONE;
-    begin: check_overflow // check if we have overflowed
-      if (rotor_out > END_VALUE)
-        rotor_out <= BEGINNING_VALUE;
-    end // check_overflow
-  end // increment
+  /* Starting, rotor does not have a value - default to zero.
+	  If the rotor has a value, then increment
+	  If the user wants to set the value, check if bad value, and 'assign' accordingly.
+  */
+	
+  // STATES
+  localparam NULL_VAL = 2'd0, VAL = 2'd1, USER_SET = 2'd2;
+	
+  // STATE REGISTER
+  reg [1:0] current_state;
+  reg [6:0] untrimmed_rotor_value;
+  
+  always@(*)
+  begin: state_table
+		case(current_state)
+			NULL_VAL: current_state = VAL; // cannot escape null value state, if have null value?
+			VAL: current_state = VAL;				// assume always in a valid valued state
+			USER_SET: current_state = VAL; 		// handle invalid value, and then go to valid value state
+		default: current_state = NULL_VAL;
+		endcase
+  end // state_table
+  
+  always@(*) begin: big_begin
+	  case(current_state)
+			NULL_VAL: 
+				begin: initialize_rotors
+					rotor_out <= DEFAULT_VALUE;
+					untrimmed_rotor_value <= DEFAULT_VALUE;
+				end // initialize_rotors 
+			
+			VAL: 
+				begin: increment
+					if (clk == 1'b0) 
+						begin: overflow
+							if (rotor_out == END_VALUE)
+								rotor_out <= DEFAULT_VALUE;
+							else
+								rotor_out <= rotor_out + ONE;
+						end // overflow
+				end // increment
+				
+			USER_SET:
+				begin: user_load
+					if (rotor_init_state > END_VALUE)
+						rotor_out <= DEFAULT_VALUE;
+					else
+						rotor_out <= rotor_init_state;
+				end // user_load
+			
+			default: 
+				begin: constant
+					rotor_out <= rotor_out; // don't do anything
+				end // constant
+	  endcase
+  end // big_begin
+  
 endmodule
