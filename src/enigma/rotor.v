@@ -20,24 +20,25 @@
   based on clk.
 */
 module rotor_0_25(
-  output reg [5:0] rotor_out,
+  output reg [6:0] rotor_out,   // 7-bit representation
   input clk,                    // sync incrementer
   input load_init_state,        // async set
   input [4:0] rotor_init_state
   );
 
-  localparam TWO_BIT_SIGN_EXT = 2'b00
-  localparam BEGINNING_VALUE = 7'd0, END_VALUE = 7'd25
+  localparam TWO_BIT_SIGN_EXT = 2'b00;
+  localparam DEFAULT_VALUE = 7'd0;
+  localparam BEGINNING_VALUE = 7'd0, END_VALUE = 7'd25;
   localparam ONE = 7'd1;
 
-  always@(*)
+  always@(load_init_state) // always when load_init_state changes - or always@(*)
   begin: reset
     if (load_init_state == 1'b1)
       begin: check_invalid
-        if (load_init_state > END_VALUE)
-          rotor_out <= BEGINNING_VALUE;
+        if (load_init_state > END_VALUE)                   // if past 7'd25 
+          rotor_out <= DEFAULT_VALUE;                      // set to default
         else
-          rotor_out <= {TWO_BIT_SIGN_EXT, rotor_init_state};
+          rotor_out <= {TWO_BIT_SIGN_EXT, rotor_init_state}; // set to inital state
       end // check_invalid
   end
 
@@ -45,7 +46,7 @@ module rotor_0_25(
   // setting?
   always@(posedge clk) // clock has incremented.
   begin: increment
-    rotor_out <= rotor_out + ONE
+    rotor_out <= rotor_out + ONE;
     begin: check_overflow // check if we have overflowed
       if (rotor_out > END_VALUE)
         rotor_out <= BEGINNING_VALUE;
