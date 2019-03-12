@@ -25,14 +25,14 @@ Project Title: Enigma
 Provide a one paragraph description of your project*:
 	Project Enigma sets out to imitate both the German "Enigma" text cipher machine and its cryptographic
 	counterpart - the British "Bombe" decoder machine developed during the mid-1940s. The Enigma machine
-	was most notable for being used by the Nazi Germany military during World War II to send encrypted messages, 
+	was most notable for being used by the Nazi Germany military during World War II to send encrypted messages,
 	And the "Bombe", designed in 1938 was designed to break these ciphers. Based on its initial settings,
 	the Enigma machine provides a non-surjective mapping for which individual alphabetic characters are
 	mapped to other alphabetic characters. The same initial setting must be used to decrypt encoded messages from Enigma.
 	The Bombe decoder receives an encrypted string (flag) from Enigma and outputs the Enigma setting for which the message
 	is decoded.
- 
-	Enigma consists of two components: 
+
+	Enigma consists of two components:
 		(1) A multi-stage* programmable text encryptor/decryptor device, and
 		(2) A string-to-initial setting decryptor device.
 
@@ -48,7 +48,7 @@ What is your plan for the first week?
 		- Design encryption components, based on encryption algorithm:
 			- FSM: State switch per button press.
 			- Memory: (Related to above)
-			- Arithmetic: Switching letters 
+			- Arithmetic: Switching letters
 
 			- "Rotor" (1 for now?)
 			- "Plugboard"
@@ -56,10 +56,10 @@ What is your plan for the first week?
 			- Setting configuration of the "Rotor" and the "Plugboard"
 
 			- word flags!
-			
+
 		* Keeping in mind that a reversal algorithm must be readily available.
 		* Initial setting is used to decrypt an encoded message.
-		
+
 		- Design decryption components:
 			- Based on encryption method.
 			- Require a word flag.
@@ -68,7 +68,7 @@ What is your plan for the first week?
 	- Week 1: Components of Enigma
 		- Import desired I/O modules.
 			- Keyboard, Text Editor
-		
+
 		- Modify I/O modules to work for our purposes.
 		- Implement a working version of the Enigma Encoder/Decoder machine.
 			- Display rotor positions on LEDR
@@ -81,21 +81,21 @@ What is your plan for the second week?
 		ENIGMA
 			- Determine if more / less components need to be added.
 			- Debug any malfunctioning components for the Enigma Machine
-			parts including the rotor, plugboard, and reflector. 
+			parts including the rotor, plugboard, and reflector.
 
 		BOMBE
 			- Implement decoder circuit, based on decryption algorithm.
 				- FSM for decoder machine (based on process of elimination / brute force?)
 				- Memory Unit: Valid states
 				- Arithmetic Unit: Possible state elimination / state switch
-	
+
 	- Week 2: Components of Enigma, Components of Bombe machine
 		- Finalize creation of Enigma
 		- Create modules for Bombe machine algorithm
 			- Input: Keyboard
 			- Output: LEDR (Rotors)
 			- 		  HEX  (Plugboard, again, if time permits)
-		
+
 		- Connect functionalities of Enigma and Bombe by a Mux
 
 What is your plan for the third week?
@@ -113,7 +113,7 @@ What is your backup plan if things don’t work out as planned?
 		- If things do not go as planned, we may:
 		(a) Reduce the number of components, i.e.:
 			- Use fewer rotor components.
-			- Constraining the number of plugboard connections.	 
+			- Constraining the number of plugboard connections.
 
 		(b) Simplify the encryption of the machine. This may be done by:
 	  		- Changing the encryption method used.
@@ -124,8 +124,8 @@ Weekly Reports
 
 
 [This is an example of a report where things didn't go so well.]
-Week 1: 
-	We added and tested the sensors and the main FSM. 
+Week 1:
+	We added and tested the sensors and the main FSM.
 	The distance sensor we had intended to use didn't work as expected (wasn't precise enough at further distances, only seems to work accurately within 5-10cm), so instead we've decided to change the project to use a light sensor instead.
 	Had trouble getting the FSM to work (kept getting stuck in state 101, took longer to debug than expected), so we may not be able to add the high score feature. We have updated that in the project description as an optional feature.
 
@@ -134,6 +134,9 @@ Week 1:
 References
 ----------
 <In this space clearly indicate all external sources used in this project. If you used anyone else's code (from previous B58 projects or other sources) clearly indicate what you used and where you found it. Usage of any material not credited in this space will be considered plagiarism. It is absolutely OK and expected to update this section as you progress in the projected.
+- DE2 Board PIN Assignment File (Altera)
+- ASIC_Notepad-- 								(Armitage, J. et al.)
+- mux.v 												(Course Material)
 
 Make sure to document what you added on top of the existing work, especially if you work with a previous project. What is it that YOU added?>
 
