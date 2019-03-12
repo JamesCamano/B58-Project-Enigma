@@ -1,0 +1,3 @@
+[submodule "src/imported_packages/ASIC_Notepad--"]
+	path = src/imported_packages/ASIC_Notepad--
+	url = https://github.com/armitag8/ASIC_Notepad--.git
