@@ -29,8 +29,7 @@ module letter_overflow_comparator(
   // convenient constants
   localparam LETTER_A = 7'd65, LETTER_B = 7'd90;
   localparam true = 1'b1, false = 1'b0;
-
-
+  
   /*
   SPACE FOR COMPARITOR MODULES
   */
@@ -51,7 +50,7 @@ module letter_overflow_comparator(
   end
 
   // define what side of the relationship we should
-  //  return
+  //  success is returned
   mux2to1 ineq_relationship(
     .x(NTCV_underflow_A),
     .y(NTCV_overflow_Z),
