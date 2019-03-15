@@ -122,13 +122,20 @@ Weekly Reports
 --------------
 <In this space, provide a report each week of what worked and what didn't, and what (if any) changes were made to your proposal)>
 
+WEEK 1:
+	- What worked:
+		- General structure of Enigma seems to fall into place.
+		- Rotor component seems to behave according to original design (after working on it during the lab; see [*-1])
+			- Basically worked on this component the entire lab, not to worry too much since the rest of the circuit is more or less combinatorial.
 
-[This is an example of a report where things didn't go so well.]
-Week 1:
-	We added and tested the sensors and the main FSM.
-	The distance sensor we had intended to use didn't work as expected (wasn't precise enough at further distances, only seems to work accurately within 5-10cm), so instead we've decided to change the project to use a light sensor instead.
-	Had trouble getting the FSM to work (kept getting stuck in state 101, took longer to debug than expected), so we may not be able to add the high score feature. We have updated that in the project description as an optional feature.
+	- What did not work:
+		- [*-1] Rotor did not function according to what was originally designed. Had to work on this circuit for a large portion of the lab.
+			- A state 'bug' manifested itself in the rotor, which suggests the following improvement:
+			- A new (better) design of the rotor will be partitioned into memory, datapath and FSM.
 
+		- [*-2] Did not manage to connect keyboard to circuit due to concerns relating to [*-1]
+
+		- To rectify [*-1] AND maintain time (i.e. starting [*-2]), will have to work on the enigma circuit before 2nd lab.
 
 
 References
