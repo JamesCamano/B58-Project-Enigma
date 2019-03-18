@@ -1,6 +1,7 @@
 \documentclass[12pt,a4paper,fleqn]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
+\usepackage{algorithm2e}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
@@ -14,7 +15,8 @@
 	\maketitle
 	\lastedited
 	\begin{itemize}
-		\item started document
+		\item added components section
+		\item added algorithm section
 	\end{itemize}		
 	
 	This document sets out to describe the components of the \emph{Bombe machine} - the encryption setting-cracker counterpart to Enigma.
@@ -24,10 +26,104 @@
 	
 	This version of the Bombe machine will take advantage of the incremental patterns used by the Enigma machine, and will iteratively filter through potential solutions by method of contradiction.
 	
+	
+	In this paper, we will assume the same definitions from the Enigma document.
 	\section{Components}
 	
-	\section{Algorithm}
+	The Bombe machine consists of:
 	
+	\begin{itemize}
+		\item A state counter, similar to that of Enigma's Rotor Component,
+		\item A letter counter / incrementer circuit
+		\item A checker circuit that uses simple lexicographic arithmetic to deduce contradictions.
+	\end{itemize}		
+	
+	\section{Algorithm}
+
+	Suppose that we are given the following sequence of letters $S_E $, outputted by Enigma:
+	$S_E = \langle s_0, s_1, s_2, ..., s_n \rangle$, where the $s_i \in \Sigma$.
+	
+	To decrypt any message from Enigma, we need only look at the subsequence $\langle s_0, s_1, s_2 \rangle$, and determine a starting rotor configuration $R = (1, x)$ for which the following are true:
+	
+	\newcommand{\fhat}{\hat{f}}	
+	
+	\begin{flalign}
+		\fhat(s_0, R) &= A  \\
+		\fhat(s_1, g(R)) &= B  \\
+		\fhat(s_2, g(g(R))) &= C
+	\end{flalign}
+	
+	This comes from the fact that we have constrained any message of the enigma machine to be encrypted with the prefix ``ABC".
+	
+	With this in mind, the algorithm is: \newline
+	
+	\newcommand{\decodefn}{\textbf{decode}}	
+	\newcommand{\inputseq}{\langle s_0, s_1, s_2 \rangle}
+	\newcommand{\abcseq}{\langle A, B, C \rangle}
+	\newcommand{\errorval}{11111}
+	\newcommand{\lexshift}[1]{\textbf{lexshift(}#1\textbf{)}}
+	\newcommand{\majorspace}{\BlankLine \BlankLine}
+	
+	\begin{algorithm}[H] \label{alg1highlevel}
+	\newcommand{\rotorposn}{rotor\textunderscore{}position}
+	\newcommand{\foundposn}{found\textunderscore{}correct\textunderscore{}position}
+	
+	\TitleOfAlgo{Bombe(S)}
+	\KwIn{S: A message that is assumed to be encrypted by the Enigma machine.}
+	\SetAlgoLined
+	\KwResult{Finds and returns the correct starting rotor position of Enigma, if one exists.}
+		% initialise the rotor position and the found position flag
+		\rotorposn{}$:=0$\;
+		\foundposn{}$:=false$\;
+		$S := \inputseq$\; 
+		
+		\majorspace
+		
+		% loop as long as we haven't overflowed and we have not found correct rotor position.
+		 \While{(\rotorposn\ $\neq 26$ \textbf{and not}(\foundposn))}{
+		 	% if we pass S through decode and we get exactly ABC, then we know we have the sequence. 
+		  	\eIf{(\textbf{\decodefn}(S[0:2], x) == $\abcseq$)}{
+		   		\foundposn{}$:=true$\;
+		   }{
+				% or else, increment rotorposn
+				\rotorposn{}++\;
+		   }   
+		 }
+		 
+		 \majorspace
+		 % exiting here, we have a result
+		 \eIf{(\foundposn)}{
+		 	\KwRet{\rotorposn} \; % where the rotor position is our desired starting position
+		 }
+		 {
+		 	\KwRet{$\errorval$} \; % where 31 is our ERROR value.
+		 }
+	 \caption{High-Level Algorithm for Bombe machine.}
+\end{algorithm}
+
+	\vspace{1cm}
+	\begin{algorithm}[H] \label{alg2decode}
+		\TitleOfAlgo{\decodefn(S, x)}
+		\KwIn{S: The 3-letter required prefix for Encrypted messages from Enigma.}
+		\SetAlgoLined
+		\KwResult{Checks the given sequence $S = \inputseq$ and back-translates it. Returns whether or not the shifting value $x$ is the correct rotor starting position.}
+		$s_0 = S[0]$\;
+		$s_1 = S[1]$\;
+		$s_2 = S[2]$\;
+		
+		\majorspace
+		
+		% note that we're shifting backwards
+		$S^\prime := \langle \lexshift{s_0, -x}, \lexshift{s_1, -(x+1)}, \lexshift{s_2, -(x+2)} \rangle$\;
+		
+		\majorspace	
+		
+		\KwRet{$ S^\prime == \abcseq$}\;
+		
+		\majorspace
+		\caption{The \decodefn(S, x) algorithm. Note that the function $\lexshift{s, x}$ represents a lexicographical shift in the direction of the sign of $x$. }
+	\end{algorithm}
+
 	\section{Justification for the Algorithm}
 	
 	\section{Additional Notes}	

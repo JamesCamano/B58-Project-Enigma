@@ -1,0 +1,8 @@
+# removing extraneous LaTeX files.
+documentation/*.log
+documentation/*.aux
+documentation/*.synctex.gz
+
+# for now
+resources
+think_space
