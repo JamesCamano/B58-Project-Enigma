@@ -20,8 +20,7 @@
   based on clk.
 */
 module rotor_0_25( // split to debug
-  output reg [6:0] rotor_out,   // 7-bit representation. note -always non-negative
-//  output reg [3:0] TEMP_STATE,   // a temporary output to see state
+  output [6:0] rotor_out,   // 7-bit representation. note -always non-negative
   input user_increment,
   input load_init_state,        // async set
   input [4:0] rotor_init_state
@@ -36,6 +35,7 @@ module rotor_0_25( // split to debug
   // control wires
   wire reset_rotor;
   wire increment_rotor;
+  wire [6:0] rotor_0_25_out;
 
   // a wire that dictates whether the user has interacted with the machine or not
   wire user_interacted;
@@ -48,14 +48,14 @@ module rotor_0_25( // split to debug
       .load_init_state(load_init_state)
   );
 
-  rotor_0_25_datapath rotor_0_25_datapath(
+  rotor_0_25_datapath rotor_datapath(
       .rotor_out(rotor_out),
       .user_input(user_interacted),
       .increment(increment_rotor),
       .reset(reset_rotor),
       .rotor_state(rotor_init_state)
   );
-
+  
 endmodule
 
 /* The control module for the rotor circuit.
@@ -94,7 +94,7 @@ module rotor_0_25_control(
     // NOTE: This saves us a state, since we will implicitly be in the same state -> only input will potentially change our state.
     always@(posedge user_increment or posedge load_init_state)
     begin: state_table
-      case(current_state):
+      case(current_state)
         ROTOR_STANDARD:   current_state = load_init_state ? ROTOR_RESET : ROTOR_STANDARD;    // if we are in standard mode, we want to be sensitive of reset.
         ROTOR_RESET:      current_state = load_init_state ? ROTOR_RESET : ROTOR_STANDARD;    // ''
         default:          current_state = ROTOR_RESET;  // we will hit this value iff current_state has no value. Default to rotor reset to 0, and we assume that DATAPATH will take care of the rest.
@@ -109,7 +109,7 @@ module rotor_0_25_control(
       increment = OFF;
       reset = OFF;
 
-      case(current_state):
+      case(current_state)
         ROTOR_STANDARD: increment = ON; // reset is already off for us.
         ROTOR_RESET:    reset = ON;     // increment is already off for us.
       endcase
@@ -148,6 +148,8 @@ module rotor_0_25_datapath(
               ON  = 1'b1;
 
   reg [6:0] bit_extended_rotor_state;
+  reg [6:0] rotor_set_value;
+  
   // we will be sensitive to reset first. Check if its on.
   always@(posedge user_input)
   begin: datapath_functionality
@@ -155,16 +157,22 @@ module rotor_0_25_datapath(
 
     if (reset == ON) // as of currently, reset is activated every time user presses reset, or at start of circuit.
       begin: reset_functionality
+		
           if (bit_extended_rotor_state >= MAX_VALUE) // if the user has inputted too large a value
-            rotor_out = DEFAULT_VALUE;               // reset the value of the rotor
+            rotor_set_value = DEFAULT_VALUE;               // reset the value of the rotor
           else
-            rotor_out = bit_extended_rotor_state
+            rotor_set_value = bit_extended_rotor_state;
+				
       end // reset_functionality
+		
     else // the fact that user_input is high means that we want to increment
+	 
       begin: increment_functionality
-        rotor_out = rotor_out + ONE;
-        if (rotor_out >= MAX_VALUE)
-          rotor_out = DEFAULT_VALUE;
+        rotor_set_value = rotor_out + ONE;
+        if (rotor_set_value > MAX_VALUE)
+          rotor_set_value = DEFAULT_VALUE;
       end // increment_functionality
+		
+		rotor_out = rotor_set_value;
   end // datapath_functionality
 endmodule

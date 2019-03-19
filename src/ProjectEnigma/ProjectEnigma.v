@@ -36,8 +36,6 @@ module main(
 	// rotor
 	rotor_0_25 rotor(
 		.rotor_out(rotor_out),
-		//.TEMP_STATE(state),
-		//.clk(CLOCK_50),
 		.user_increment(KEY[2]),
 		.load_init_state(SW[16]),
 		.rotor_init_state(SW[4:0])
