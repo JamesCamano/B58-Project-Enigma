@@ -1,4 +1,0 @@
-=== DECRYPTION ALGORITHM ===
-
-This file details the decryption algorithm that the Bombe machine
-will use, to decrypt messages from Enigma.
