@@ -20,7 +20,8 @@
   based on clk.
 */
 module rotor_0_25( // split to debug
-  output [6:0] rotor_out,   // 7-bit representation. note -always non-negative
+  output [6:0] rotor_out,   // 7-bit representation. note -always non-negativ
+  output RESET_TRUE,
   input user_increment,
   input load_init_state,        // async set
   input [4:0] rotor_init_state
@@ -39,7 +40,7 @@ module rotor_0_25( // split to debug
 
   // a wire that dictates whether the user has interacted with the machine or not
   wire user_interacted;
-  assign user_interacted = user_increment | load_init_state;
+  or(user_interacted, user_increment, load_init_state);
 
   rotor_0_25_control rotor_control(
       .increment(increment_rotor),
@@ -55,6 +56,8 @@ module rotor_0_25( // split to debug
       .reset(reset_rotor),
       .rotor_state(rotor_init_state)
   );
+  
+  assign RESET_TRUE = reset_rotor;
   
 endmodule
 
@@ -151,13 +154,12 @@ module rotor_0_25_datapath(
   reg [6:0] rotor_set_value;
   
   // we will be sensitive to reset first. Check if its on.
-  always@(posedge user_input)
+  always@(posedge user_input or posedge reset) // why check for reset?
   begin: datapath_functionality
     bit_extended_rotor_state <= {TWO_BIT_SIGN_EXT, rotor_state};
 
     if (reset == ON) // as of currently, reset is activated every time user presses reset, or at start of circuit.
       begin: reset_functionality
-		
           if (bit_extended_rotor_state >= MAX_VALUE) // if the user has inputted too large a value
             rotor_set_value = DEFAULT_VALUE;               // reset the value of the rotor
           else
@@ -166,13 +168,12 @@ module rotor_0_25_datapath(
       end // reset_functionality
 		
     else // the fact that user_input is high means that we want to increment
-	 
       begin: increment_functionality
         rotor_set_value = rotor_out + ONE;
         if (rotor_set_value > MAX_VALUE)
           rotor_set_value = DEFAULT_VALUE;
       end // increment_functionality
-		
-		rotor_out = rotor_set_value;
+	
+	rotor_out <= rotor_set_value;
   end // datapath_functionality
 endmodule
