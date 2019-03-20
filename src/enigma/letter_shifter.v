@@ -14,11 +14,11 @@ A module to represent the letter shifter circuit block for Enigma.
 module letter_shifter(
   output [7:0] letter_out, // eight-bit letter out
   input encrypt,
-  input [6:0] char_input,
+  input [7:0] char_input,
   input [7:0] rotor_value // Rotor_Out in diagram
   );
 
-  wire [6:0] unwrapped_char_sum;
+  wire [7:0] unwrapped_char_sum;
   wire wrap;
   wire wrapped_sum; // output of 2nd level adder-subtractor
 
@@ -26,7 +26,7 @@ module letter_shifter(
   localparam ALPHA_WRAP = 7'd26;
 
   // first 7-bit adder -> shifting the letter rotor_value places.
-  adder_seven_bit unwrapped_shift(
+  adder_eight_bit unwrapped_shift(
       .sum(unwrapped_char_sum),
       .A(char_input),
       .B(rotor_value),
@@ -40,7 +40,7 @@ module letter_shifter(
   );
 
   // 2nd level adder -> wrapping the previously un-shifted value.
-  adder_seven_bit wrapper_shift(
+  adder_eight_bit wrapper_shift(
       .sum(wrapped_sum),
       .A(unwrapped_char_sum),
       .B(ALPHA_WRAP), // does this work?

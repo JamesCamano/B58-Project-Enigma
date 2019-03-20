@@ -26,8 +26,8 @@ module letter_overflow_comparator(
   wire underflow_A;
   wire overflow_Z;
 */
-  // convenient constants
-  localparam LETTER_A = 7'd65, LETTER_Z = 7'd90;
+  // convenient constants- updated for ASIC Notepad-- proj
+  localparam LETTER_A = 8'h41, LETTER_Z = 8'h5A; //LETTER_A = 7'd65, LETTER_Z = 7'd90;
   localparam true = 1'b1, false = 1'b0;
   
   /*

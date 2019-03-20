@@ -4,14 +4,14 @@
 Represents the Enigma Machine.
 */
 module enigma(
-  output [7:0] letter_out, // 8-bit letter representation
+  output [7:0] letter_out,
   input encrypt,
-  input [7:0] char_input, // 8-bit letter representation
+  input [7:0] char_input,			// ASCII
   input char_pressed,
   input [4:0] rotor_init_state,
   input load_init_state);
 
-  wire [7:0] rotor_out; // 8-bit letter representation
+  wire [7:0] rotor_out;
 
   // first rotor
   rotor_0_25 rotor_1(

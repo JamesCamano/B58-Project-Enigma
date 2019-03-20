@@ -20,6 +20,7 @@ output [6:0]HEXN
 
 module main(
 		output [7:0] LEDG,
+		output [17:0] LEDR,
 		output [6:0] HEX0,
 		output [6:0] HEX2,
 		output [6:0] HEX3,
@@ -36,15 +37,14 @@ module main(
 	// rotor
 	rotor_0_25 rotor(
 		.rotor_out(rotor_out),
-		//.TEMP_STATE(state),
-		//.clk(CLOCK_50),
+		.RESET_TRUE(LEDR[17]),
 		.user_increment(KEY[2]),
 		.load_init_state(SW[16]),
 		.rotor_init_state(SW[4:0])
 	);
 
-	assign LEDG[7] = key_pressed;
-	assign LEDG[6:0] = rotor_out;
+	//assign LEDG[7] = key_pressed;
+	assign LEDG[7:0] = rotor_out;
 
 	// TEMP - seeing state
 	hex_display state_display(
@@ -52,16 +52,16 @@ module main(
 		.OUT(HEX0)
 	);
 
-/**
+
 	// TEMP: seeing rotor value
 	hex_display rotor_val_low(
 		.IN(rotor_out[3:0]),
 		.OUT(HEX2)
 	);
-*/
+
 
 	hex_display rotor_val_high(
-		.IN({1'b0, rotor_out[6:4]}),
+		.IN({1'b0, rotor_out[7:4]}),
 		.OUT(HEX3)
 	);
 
