@@ -3,6 +3,8 @@ documentation/*.log
 documentation/*.aux
 documentation/*.synctex.gz
 
-# for now
+# for now - these are large files for enigma background
 resources
-think_space
+
+think_space/.idea
+think_space/__pycache__*
