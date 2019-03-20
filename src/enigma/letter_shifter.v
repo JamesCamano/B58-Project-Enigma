@@ -12,10 +12,10 @@ A module to represent the letter shifter circuit block for Enigma.
     - encrypt represents the mode of the enigma machine.
 */
 module letter_shifter(
-  output [7:0] letter_out,
+  output [7:0] letter_out, // eight-bit letter out
   input encrypt,
   input [6:0] char_input,
-  input [6:0] rotor_value // Rotor_Out in diagram
+  input [7:0] rotor_value // Rotor_Out in diagram
   );
 
   wire [6:0] unwrapped_char_sum;

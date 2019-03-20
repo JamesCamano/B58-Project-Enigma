@@ -7,13 +7,13 @@
 
       TODO: Carryout C_Out if needed.
  */
-module adder_seven_bit(
-  output [6:0] sum,
-  input  [6:0] A,
-  input  [6:0] B,
+module adder_eight_bit(
+  output [7:0] sum,
+  input  [7:0] A,
+  input  [7:0] B,
   input        add);
 
-  reg [6:0] result;
+  reg [7:0] result;
   // convenient constants
   localparam ADD_ENABLE = 1'b1;
   /* check which operation we need to do, and proceed accordingly.

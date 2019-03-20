@@ -20,17 +20,17 @@
   based on clk.
 */
 module rotor_0_25( // split to debug
-  output reg [6:0] rotor_out,   // 7-bit representation. note -always non-negative
-//  output reg [3:0] TEMP_STATE,   // a temporary output to see state
+  output reg [7:0] rotor_out,       // 8-bit representation. note -always non-negative
+//  output reg [3:0] TEMP_STATE,    // a temporary output to see state
   input user_increment,
-  input load_init_state,        // async set
-  input [4:0] rotor_init_state
+  input load_init_state,            // async set
+  input [4:0] rotor_init_state      // 5-bit state
   );
   // 25 = 16 + 8 +
-  localparam TWO_BIT_SIGN_EXT = 2'b00;
-  localparam DEFAULT_VALUE = 7'd0;
-  localparam BEGINNING_VALUE = 7'd0, END_VALUE = 7'b0011001;
-  localparam ONE = 7'b0_000_001;
+  localparam THREE_BIT_SIGN_EXT = 2'b00;
+  localparam DEFAULT_VALUE = 8'd0;
+  localparam BEGINNING_VALUE = 8'd0, END_VALUE = 7'b0011001;
+  localparam ONE = 8'b0000_0001;
   localparam ON = 1'b1;
 
   // control wires
@@ -131,7 +131,7 @@ endmodule
     * if rotor_state > 5'd25, then the circuit will set the value to the default of 5'd0.
  */
 module rotor_0_25_datapath(
-  output reg [6:0] rotor_out,   // output value of rotor.
+  output reg [7:0] rotor_out,   // output value of rotor.
   input user_input,             // a button press - triggere
   input increment,
   input reset,
@@ -140,14 +140,14 @@ module rotor_0_25_datapath(
   // convenient constants.
   localparam TWO_BIT_SIGN_EXT = 2'b00;
 
-  localparam MIN_VALUE = 7'd0, MAX_VALUE = 7'b0011001;
-  localparam DEFAULT_VALUE = 7'd0;
-  localparam ONE = 7'b0_000_001;
+  localparam MIN_VALUE = 8'd0, MAX_VALUE = 8'b0001_1001;
+  localparam DEFAULT_VALUE = 8'd0;
+  localparam ONE = 8'b0000_0001;
 
   localparam  OFF = 1'b0,
               ON  = 1'b1;
 
-  reg [6:0] bit_extended_rotor_state;
+  reg [7:0] bit_extended_rotor_state;
   // we will be sensitive to reset first. Check if its on.
   always@(posedge user_input)
   begin: datapath_functionality
