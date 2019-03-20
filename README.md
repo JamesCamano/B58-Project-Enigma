@@ -14,3 +14,7 @@ is decoded.
 Enigma consists of two components: 
   (1) A multi-stage* programmable text encryptor/decryptor device, and
   (2) A string-setting decryptor device.
+
+
+keyboard documentation!
+http://www.eecg.toronto.edu/~jayar/ece241_08F/AudioVideoCores/ps2/ps2.html#id478856
