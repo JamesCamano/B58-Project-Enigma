@@ -20,7 +20,7 @@
   based on clk.
 */
 module rotor_0_25( // split to debug
-  output [6:0] rotor_out,   // 7-bit representation. note -always non-negativ
+  output [7:0] rotor_out,   // 8-bit representation. note -always non-negative
   output RESET_TRUE,
   input user_increment,
   input load_init_state,        // async set
@@ -134,29 +134,29 @@ endmodule
     * if rotor_state > 5'd25, then the circuit will set the value to the default of 5'd0.
  */
 module rotor_0_25_datapath(
-  output reg [6:0] rotor_out,   // output value of rotor.
+  output reg [7:0] rotor_out,   // output value of rotor.
   input user_input,             // a button press - triggere
   input increment,
   input reset,
   input [4:0] rotor_state);
 
   // convenient constants.
-  localparam TWO_BIT_SIGN_EXT = 2'b00;
+  localparam THREE_BIT_SIGN_EXT = 3'b000;
 
-  localparam MIN_VALUE = 7'd0, MAX_VALUE = 7'b0011001;
+  localparam MIN_VALUE = 8'd0, MAX_VALUE = 8'b0001_1001;
   localparam DEFAULT_VALUE = 7'd0;
-  localparam ONE = 7'b0_000_001;
+  localparam ONE = 8'b0000_0001;
 
   localparam  OFF = 1'b0,
               ON  = 1'b1;
 
-  reg [6:0] bit_extended_rotor_state;
-  reg [6:0] rotor_set_value;
+  reg [7:0] bit_extended_rotor_state;
+  reg [7:0] rotor_set_value;
   
   // we will be sensitive to reset first. Check if its on.
   always@(posedge user_input or posedge reset) // why check for reset?
   begin: datapath_functionality
-    bit_extended_rotor_state <= {TWO_BIT_SIGN_EXT, rotor_state};
+    bit_extended_rotor_state <= {THREE_BIT_SIGN_EXT, rotor_state};
 
     if (reset == ON) // as of currently, reset is activated every time user presses reset, or at start of circuit.
       begin: reset_functionality

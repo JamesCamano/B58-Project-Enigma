@@ -44,7 +44,7 @@ module main(
 	);
 
 	assign LEDG[7] = key_pressed;
-	assign LEDG[6:0] = rotor_out;
+	assign LEDG[7:0] = rotor_out;
 
 	// TEMP - seeing state
 	hex_display state_display(
@@ -52,16 +52,16 @@ module main(
 		.OUT(HEX0)
 	);
 
-/**
+
 	// TEMP: seeing rotor value
 	hex_display rotor_val_low(
 		.IN(rotor_out[3:0]),
 		.OUT(HEX2)
 	);
-*/
+
 
 	hex_display rotor_val_high(
-		.IN({1'b0, rotor_out[6:4]}),
+		.IN({1'b0, rotor_out[7:4]}),
 		.OUT(HEX3)
 	);
 
