@@ -43,7 +43,7 @@ module main(
 		.rotor_init_state(SW[4:0])
 	);
 
-	assign LEDG[7] = key_pressed;
+	//assign LEDG[7] = key_pressed;
 	assign LEDG[7:0] = rotor_out;
 
 	// TEMP - seeing state
