@@ -1,4 +1,6 @@
-# Enigma
+# Project Enigma
+
+## Description
 An interpretation of the Enigma machine and its Turing decoder counterpart.
 
 Project Enigma sets out to imitate both the German "Enigma" text cipher machine and its cryptographic
@@ -15,6 +17,4 @@ Enigma consists of two components:
   (1) A multi-stage* programmable text encryptor/decryptor device, and
   (2) A string-setting decryptor device.
 
-
-keyboard documentation!
-http://www.eecg.toronto.edu/~jayar/ece241_08F/AudioVideoCores/ps2/ps2.html#id478856
+For __Enigma__ in more detail, please see the .pdf files in the `documentation` directory.
