@@ -1,4 +1,4 @@
-CSCB58 Project Report: Winter 2019
+﻿CSCB58 Project Report: Winter 2019
 
 Team Member A
 -------------
@@ -137,6 +137,16 @@ WEEK 1:
 
 		- To rectify [*-1] AND maintain time (i.e. starting [*-2]), will have to work on the enigma circuit before 2nd lab.
 
+WEEK 2:
+	- What Worked:
+		- Finally Fixed Rotor: Removed extraneous and unnecessary components that obsfuscated design.
+		- Connected Keyboard for the first time - ASCII addition seems to work as expected (though, will have to understand what the various PS-2 keyboard codes mean.)
+		- Worked on structure of the ASIC-- Notepad. Contemplating an injection of Enigma / Bombe into this existing project.
+
+	- What didn't work:
+		- Did not get to connecting keyboard I/O to VGA.
+		- Did not get to starting to implement Bombe machine in Verilog.
+
 
 References
 ----------
@@ -144,6 +154,7 @@ References
 - DE2 Board PIN Assignment File (Altera)
 - ASIC_Notepad-- 								(Armitage, J. et al.)
 - mux.v 												(Course Material)
+- hex_decoder.v									(Course Material)
 
 Make sure to document what you added on top of the existing work, especially if you work with a previous project. What is it that YOU added?>
 
@@ -152,6 +163,7 @@ Make sure to document what you added on top of the existing work, especially if 
 Repo & Video
 ------------
 <At the end of the project, provide links to your code repository and presentation video (and passwords if not public>
+REPO: https://github.com/JamesCamano/B58-Project-Enigma.git
 
 EXTRA INFO (may or may not add to description):
 		- state changes with every input (extra complexity with developing enigma, bombe)
