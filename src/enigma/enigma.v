@@ -24,7 +24,7 @@ module enigma(
   // letter shifter
   letter_shifter shifter(
     .letter_out(letter_out),
-    .encrypt(encrypt),
+    .positive_shift(positive_shift),
     .char_input(char_input),
     .rotor_value(rotor_out)
   );

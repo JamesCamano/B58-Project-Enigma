@@ -9,11 +9,12 @@ A module to represent the letter shifter circuit block for Enigma.
    - rotor_value is the 7-bit representation of a integer in the range
      0...25.
 
-    - encrypt represents the mode of the enigma machine.
+    - positive_shift represents the mode of the adder - whether to
+      lexicographically add or subtract.
 */
 module letter_shifter(
   output [7:0] letter_out, // eight-bit letter out
-  input encrypt,
+  input positive_shift,
   input [7:0] char_input,
   input [7:0] rotor_value // Rotor_Out in diagram
   );
@@ -30,7 +31,7 @@ module letter_shifter(
       .sum(unwrapped_char_sum),
       .A(char_input),
       .B(rotor_value),
-      .add(encrypt)
+      .add(positive_shift)
   );
 
   letter_overflow_comparator overflow (
@@ -44,7 +45,7 @@ module letter_shifter(
       .sum(wrapped_sum),
       .A(unwrapped_char_sum),
       .B(ALPHA_WRAP), // does this work?
-      .add(encrypt) // either adds or subtracts the ALPHA_WRAP value
+      .add(positive_shift) // either adds or subtracts the ALPHA_WRAP value
   );
 
   // mux that picks the correct encryption value
