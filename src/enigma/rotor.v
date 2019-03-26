@@ -21,7 +21,6 @@
 */
 module rotor_0_25( // split to debug
   output [7:0] rotor_out,   // 8-bit representation. note -always non-negative
-  output RESET_TRUE,
   input user_increment,
   input load_init_state,            // async set
   input [4:0] rotor_init_state      // 5-bit state
@@ -56,8 +55,6 @@ module rotor_0_25( // split to debug
       .reset(reset_rotor),
       .rotor_state(rotor_init_state)
   );
-
-  assign RESET_TRUE = reset_rotor;
 
 endmodule
 

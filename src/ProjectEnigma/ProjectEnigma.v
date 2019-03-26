@@ -37,7 +37,6 @@ module main(
 	// rotor
 	rotor_0_25 rotor(
 		.rotor_out(rotor_out),
-		.RESET_TRUE(LEDR[17]),
 		.user_increment(KEY[2]),
 		.load_init_state(SW[16]),
 		.rotor_init_state(SW[4:0])
