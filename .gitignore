@@ -3,13 +3,15 @@ documentation/*.log
 documentation/*.aux
 documentation/*.synctex.gz
 
-ProjectEnigma/db
-ProjectEnigma/incremental_db
-ProjectEnigma/output_files
-ProjectEnigma/simulation
-ProjectEnigma/*.qsf
-ProjectEnigma/*.bak
-ProjectEnigma/*.qws
+# quartus files
+src/ProjectEnigma/db
+src/ProjectEnigma/incremental_db
+src/ProjectEnigma/output_files
+src/ProjectEnigma/simulation
+src/ProjectEnigma/*.qsf
+src/ProjectEnigma/*.bak
+src/ProjectEnigma/*.qws
+src/ProjectEnigma/*.qpf
 
 # for now - these are large files for enigma background
 resources
