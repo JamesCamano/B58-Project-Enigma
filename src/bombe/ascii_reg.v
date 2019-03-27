@@ -15,15 +15,16 @@ module ascii_reg (
   input [7:0] letter
   );
 
-  localparam CHAR_A = 8'd41; // see ascii decoder for ASIC-- notepad.
+  localparam CHAR_A = 8'h41; // see ascii decoder for ASIC-- notepad.
   localparam ON = 1'b1;
 
-  always @ (posedge reset or posedge load) begin
+  always @ (posedge reset or posedge load)
+  begin: load_reset
     // check if reset
     if (reset == ON)
       S = CHAR_A;
     else
       S = letter; // load must have triggered this.
-
-  end
+  end // load_reset
+  
 endmodule //ascii_reg

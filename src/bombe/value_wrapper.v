@@ -8,5 +8,5 @@ module value_wrapper_0_25(
   input [7:0] val
   );
   localparam  TWENTY_SIX = 8'd26;
-  assign wrapped_val = val % TWENTY_SIXl
+  assign wrapped_val = val % TWENTY_SIX;
 endmodule
