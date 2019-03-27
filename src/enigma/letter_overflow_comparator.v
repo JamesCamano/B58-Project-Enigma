@@ -28,7 +28,7 @@ module letter_overflow_comparator(
 */
   // convenient constants- updated for ASIC Notepad-- proj
   localparam LETTER_A = 8'h41, LETTER_Z = 8'h5A; //LETTER_A = 7'd65, LETTER_Z = 7'd90;
-  localparam true = 1'b1, false = 1'b0;
+  localparam TRUE = 1'b1, FALSE = 1'b0;
   
   /*
   SPACE FOR COMPARITOR MODULES
@@ -36,24 +36,24 @@ module letter_overflow_comparator(
   always@(*)
   begin
     if(NTCV < LETTER_A) // underflow condition.
-      NTCV_underflow <= true;
+      NTCV_underflow <= TRUE;
     else
-      NTCV_underflow <= false;
+      NTCV_underflow <= FALSE;
   end
 
   always@(*)
   begin
-    if(NTCV > LETTER_Z) // underflow condition.
-      NTCV_overflow <= true;
+    if(NTCV > LETTER_Z) // overflow condition.
+      NTCV_overflow <= TRUE;
     else
-      NTCV_overflow <= false;
+      NTCV_overflow <= FALSE;
   end
 
   // define what side of the relationship we should
   //  success is returned
   mux2to1 ineq_relationship(
-    .x(NTCV_underflow_A),
-    .y(NTCV_overflow_Z),
+    .x(NTCV_underflow),
+    .y(NTCV_overflow),
     .s(Gr),
     .m(success)
   );

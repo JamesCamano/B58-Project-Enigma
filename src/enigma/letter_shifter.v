@@ -14,6 +14,8 @@ A module to represent the letter shifter circuit block for Enigma.
 */
 module letter_shifter(
   output [7:0] letter_out, // eight-bit letter out
+  output [7:0] TEMP_NTCS,
+  output TEMP_WRAP,
   input positive_shift,
   input [7:0] char_input,
   input [7:0] rotor_value // Rotor_Out in diagram
@@ -21,10 +23,10 @@ module letter_shifter(
 
   wire [7:0] unwrapped_char_sum;
   wire wrap;
-  wire wrapped_sum; // output of 2nd level adder-subtractor
+  wire [7:0] wrapped_sum; // output of 2nd level adder-subtractor
 
   // the reshifting value for character overflow.
-  localparam ALPHA_WRAP = 7'd26;
+  localparam ALPHA_WRAP = 8'd26;
 
   // first 7-bit adder -> shifting the letter rotor_value places.
   adder_eight_bit unwrapped_shift(
@@ -34,25 +36,30 @@ module letter_shifter(
       .add(positive_shift)
   );
 
+
   letter_overflow_comparator overflow (
       .success(wrap),
       .NTCV(unwrapped_char_sum),
-      .Gr(enable)
+      .Gr(positive_shift)
   );
+
+  assign TEMP_WRAP = wrap;
+  assign TEMP_NTCS = letter_out;
 
   // 2nd level adder -> wrapping the previously un-shifted value.
   adder_eight_bit wrapper_shift(
       .sum(wrapped_sum),
       .A(unwrapped_char_sum),
-      .B(ALPHA_WRAP), // does this work?
-      .add(positive_shift) // either adds or subtracts the ALPHA_WRAP value
+      .B(ALPHA_WRAP),
+      .add(~positive_shift) // either adds or subtracts the ALPHA_WRAP value. Note that we want to shift in the *opposite direction* of
   );
 
   // mux that picks the correct encryption value
-  mux2to1 encrypted_letter_mux(
+  mux2to1_eight_bit encrypted_letter_mux (
+    .m(letter_out),
     .x(unwrapped_char_sum), // selected when s = wrap = 0
     .y(wrapped_sum),        // selected when s = wrap = 1
-    .s(wrap),               // tells us whether we need to wrap letter value
-    .m(letter_out));
+    .s(wrap)               // tells us whether we need to wrap letter value
+  );
 
 endmodule

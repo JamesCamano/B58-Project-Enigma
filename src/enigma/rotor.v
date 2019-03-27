@@ -140,7 +140,7 @@ module rotor_0_25_datapath(
   // convenient constants.
   localparam THREE_BIT_SIGN_EXT = 3'b000;
 
-  localparam MIN_VALUE = 8'd0, MAX_VALUE = 8'b0001_1001;
+  localparam MIN_VALUE = 8'd0, MAX_VALUE = 8'd25;
   localparam DEFAULT_VALUE = 8'd0;
   localparam ONE = 8'b0000_0001;
 
@@ -171,6 +171,7 @@ module rotor_0_25_datapath(
           rotor_set_value = DEFAULT_VALUE;
       end // increment_functionality
 
-	rotor_out <= rotor_set_value;
+	rotor_out = rotor_set_value;
+	
   end // datapath_functionality
 endmodule

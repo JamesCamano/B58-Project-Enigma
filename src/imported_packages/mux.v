@@ -28,3 +28,27 @@ module mux2to1(x, y, s, m);
     // assign m = s ? y : x;
 
 endmodule
+
+module mux2to1_eight_bit(
+    output [7:0] m, //
+    input [7:0] x, //selected when s is 0
+    input [7:0] y, //selected when s is 1
+    input s //select signal
+	 );
+	 
+	 /*
+	 reg [7:0] out;
+	
+	 always@(*)
+	 begin: mux
+		if (s == 1'b0) 
+			out = x;
+		else
+			out = y;
+	 end // mux
+	 
+    assign m = out;
+	 */
+	 
+	 assign m = s ? y : x;
+endmodule

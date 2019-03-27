@@ -21,9 +21,9 @@ module adder_eight_bit(
   always@(*)
   begin: operation_check
     if(add == ADD_ENABLE) // add only if ADD_ENABLE is logic-1.
-      result <= A+B; // A+B
+      result = A+B; // A+B
     else
-      result <= A-B; // A-B
+      result = A-B; // A-B
   end // operation_check
 
   // output
