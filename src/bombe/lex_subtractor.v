@@ -13,9 +13,10 @@ module lex_subtractor(
 
   localparam FALSE = 1'b0;
 
+	// can safely assume this works
   letter_shifter subtractor(
       .letter_out(S),
-      .positive_shift(FALSE),
+      .positive_shift(FALSE),	// we want to subtract the values given by the rotor.
       .char_input(character),
       .rotor_value(shift)     // the shift value
   );
