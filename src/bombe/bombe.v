@@ -28,10 +28,29 @@ endmodule // bombe
     - 3. Rotor increment
     - 4. Success/Failure.
  */
-module bombe_control ();
+module bombe_control (
+  output reset_to_beginning,            // reset to start
+  output load_s1,                       // load first ascii reg.
+  output load_s2,                       // '' second ''
+  output load_s3,                       // '' third ''
+  output rotor_enable,                  // enabler for rotor increment.
+  input reset,                          // async reset
+  input key_press,                      // indicator bit for user pressing bit.
+  input go,                             // indicator bit for user starting bombe.
+  input arithmetic_end                  // indicator bit for deduction success/failure.
+  );
 
 endmodule //bombe_control
 
-module bombe_datapath ();
+module bombe_datapath (
+  output [7:0] bombe_out,
+  output arithmetic_end,
+  input [7:0] ascii_val,
+  input load_s1,
+  input load_s2,
+  input load_s3,
+  input reset,
+  input rotor_enable,
+  input clk);
 
 endmodule //bombe_datapath
