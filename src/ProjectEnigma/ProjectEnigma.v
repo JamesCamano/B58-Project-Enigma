@@ -18,7 +18,7 @@ output [6:0]HEXN
 
 */
 
-module main(
+module Enigma(
 		output [7:0] LEDG,
 		output [17:0] LEDR,
 		output [6:0] HEX0,

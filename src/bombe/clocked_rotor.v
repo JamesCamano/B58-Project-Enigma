@@ -57,9 +57,8 @@ module clocked_rotor_FSM(
   reg [2:0] current_state;  // 3-bit state register
   //reg next_state;
 
-  always @( posedge clock or reset ) begin: // state_table
-    // always go to reset if it is on, otherwise, just bounce
-    case(current_state)
+  always @( posedge clk or posedge reset ) begin: state_table
+    case(current_state) // always go to reset if it is on, otherwise, just bounce
       SAVE_VALUE:       current_state = reset ? RESET_ROTOR : CHECK_VALUE;
       CHECK_VALUE:      current_state = reset ? RESET_ROTOR : SAVE_VALUE;
       RESET_ROTOR:      current_state = reset ? RESET_ROTOR : SAVE_VALUE;  // if we have just reset, save the value for safety
@@ -68,7 +67,7 @@ module clocked_rotor_FSM(
   end // state_table
 
   // querying the current state
-  always @ ( posedge clock or reset ) begin: query_state
+  always @ ( posedge clk or posedge reset ) begin: query_state
     key_release = OFF;
     reset_state = OFF;
 
@@ -85,10 +84,10 @@ endmodule
 The datapath for the clocked rotor.
 */
 module clocked_rotor_datapath(
-  output [7:0] rotor_out;
-  input key_release;
-  input reset_state;
-  input [4:0] rotor_init_state;
+  output [7:0] rotor_out,
+  input key_release,
+  input reset_state,
+  input [4:0] rotor_init_state
 );
 
   wire key_press = ~key_release; // if key_release is 0, then we want to increment the rotor.

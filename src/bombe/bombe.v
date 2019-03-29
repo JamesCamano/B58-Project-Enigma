@@ -15,9 +15,9 @@ NOTE: These flag characters <S0, S1, S2> are assumed to be the encrypted result
 module bombe (
   output [7:0] bombe_out,
   input  [7:0] char_in,
-  input  key_press;     // HOW
-  input  go;            // start deduction
-  input clk;            // assume CLOCK_50
+  input  key_press,    // HOW
+  input  go,            // start deduction
+  input clk,            // assume CLOCK_50
   input reset);
 
   wire circuit_reset;  // flag for resetting circuit
@@ -78,7 +78,7 @@ module bombe_control (
   input key_press,                          // indicator bit for user pressing bit.
   input go,                                 // indicator bit for user starting bombe.
   input arithmetic_end,                     // indicator bit for deduction success/failure.
-  input control_clk;                        // clock for control circuit.
+  input control_clk                        // clock for control circuit.
   );
 
   /* STATES:
@@ -115,7 +115,7 @@ module bombe_control (
   localparam LOAD_S2_WAIT   = 4'd5;
 
   // process start / continue
-  localparam DECUCT_WAIT    = 4'd10;
+  localparam DEDUCT_WAIT    = 4'd10;
   localparam DEDUCT         = 4'd6;   // main functionality state.
 
   // end/reset
@@ -131,12 +131,12 @@ module bombe_control (
         LOAD_S0:        next_state = key_press ? LOAD_S0_WAIT : LOAD_S0;    // loop in LOAD_S0 until key_press is high.
         LOAD_S0_WAIT:   next_state = key_press ? LOAD_S0_WAIT : LOAD_S1;    // loop in waiting stage, until the key is released.
         LOAD_S1:        next_state = key_press ? LOAD_S1_WAIT : LOAD_S1;
-        LOAD_S1_WAIT    next_state = key_press ? LOAD_S1_WAIT : LOAD_S2;
+        LOAD_S1_WAIT:   next_state = key_press ? LOAD_S1_WAIT : LOAD_S2;
         LOAD_S2:        next_state = key_press ? LOAD_S2_WAIT : LOAD_S2;
-        LOAD_S2_WAIT    next_state = key_press ? LOAD_S2_WAIT : DEDUCT_WAIT;// Begin deducing after this key press goes low.
-        DEDUCT_WAIT     next_state = go        ? DEDUCT : DEDUCT_WAIT;
-        DEDUCT          next_state = arithmetic_end ? PROCESS_END: DEDUCT;  // Until we get the arithmetic_end flag, keep on deducing.
-        PROCESS_END     next_state = reset ? RESET : PROCESS_END;           // stay in process end state until user explicitly wants to reset.
+        LOAD_S2_WAIT:   next_state = key_press ? LOAD_S2_WAIT : DEDUCT_WAIT;// Begin deducing after this key press goes low.
+        DEDUCT_WAIT:    next_state = go        ? DEDUCT : DEDUCT_WAIT;
+        DEDUCT:         next_state = arithmetic_end ? PROCESS_END: DEDUCT;  // Until we get the arithmetic_end flag, keep on deducing.
+        PROCESS_END:    next_state = reset ? RESET : PROCESS_END;           // stay in process end state until user explicitly wants to reset.
         RESET:          next_state = RESET_WAIT;
         RESET_WAIT:     next_state = reset ? RESET_WAIT : LOAD_S0;          // loop in reset_wait state until reset is low.
       default: next_state = RESET;                                          // default to reset so that we can assure that everything has correct starting values.
@@ -165,7 +165,7 @@ module bombe_control (
   end // enable_signals
 
   // SWITCH TO NEXT STATE
-  always @ ( posedge clk ) begin: state_transition
+  always @ ( posedge control_clk ) begin: state_transition
     // check for reset here for async reset?
     current_state <= next_state;
   end
@@ -314,7 +314,7 @@ module bombe_datapath (
 
   // we have matched the sequence iff equality passes.
   assign matched_sequence = &R;
-  assign rotor_end = rotor_value == ROTOR_MAX;
+  assign rotor_end = rotor_out == ROTOR_MAX;
   and(result_mux_select, rotor_end, ~matched_sequence);
 
   mux2to1(
