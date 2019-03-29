@@ -11,6 +11,7 @@ TODO: Write an FSM for this - off/on for clocked_increment and load.
 */
 module clocked_rotor_0_25(
   output [7:0] rotor_out,   // 8-bit representation. note -always non-negative
+  output [2:0] current_state,
   input increment,
   input load,                       // async set
   input [4:0] rotor_init_state,     // 5-bit state
@@ -22,6 +23,7 @@ module clocked_rotor_0_25(
 
   clocked_rotor_FSM fsm(
     .key_release(key_released),
+	 .temp_current_state(current_state),
     .reset_state(reset_state),
     .clk(clk),
     .reset(load)
@@ -42,6 +44,7 @@ endmodule // clocked_rotor_0_25
 module clocked_rotor_FSM(
   output reg key_release,             // tells the datapath to reset the increment bit
   output reg reset_state,             // tells the datapath to reset the state of the rotor.
+  output reg [2:0] temp_current_state,	
   input clk,                          // clock of clocked rotor.
   input reset);
 
@@ -55,14 +58,14 @@ module clocked_rotor_FSM(
   localparam  OFF = 1'b0;
 
   reg [2:0] current_state;  // 3-bit state register
-  //reg next_state;
+  reg [2:0] next_state;
 
   always @( posedge clk or posedge reset ) begin: state_table
     case(current_state) // always go to reset if it is on, otherwise, just bounce
-      SAVE_VALUE:       current_state = reset ? RESET_ROTOR : CHECK_VALUE;
-      CHECK_VALUE:      current_state = reset ? RESET_ROTOR : SAVE_VALUE;
-      RESET_ROTOR:      current_state = reset ? RESET_ROTOR : SAVE_VALUE;  // if we have just reset, save the value for safety
-      default:          current_state = SAVE_VALUE;                        // default to save value. Ensures that we always have a valid state.
+      SAVE_VALUE:       next_state = reset ? RESET_ROTOR : CHECK_VALUE;
+      CHECK_VALUE:      next_state = reset ? RESET_ROTOR : SAVE_VALUE;
+      RESET_ROTOR:      next_state = reset ? RESET_ROTOR : SAVE_VALUE;  // if we have just reset, save the value for safety
+      default:          next_state = SAVE_VALUE;                        // default to save value. Ensures that we always have a valid state.
     endcase
   end // state_table
 
@@ -70,7 +73,7 @@ module clocked_rotor_FSM(
   always @ ( posedge clk or posedge reset ) begin: query_state
     key_release = OFF;
     reset_state = OFF;
-
+	 temp_current_state = current_state;
     case(current_state)
       SAVE_VALUE:       key_release = ON;   // release the key
       CHECK_VALUE:      key_release = OFF;  // press the key
@@ -78,6 +81,11 @@ module clocked_rotor_FSM(
     endcase
   end // query_state
 
+  
+	always @ ( posedge clk or posedge reset ) begin: state_transition
+		current_state = next_state;
+	end // 
+  
 endmodule
 
 /*

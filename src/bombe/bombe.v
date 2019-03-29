@@ -14,6 +14,8 @@ NOTE: These flag characters <S0, S1, S2> are assumed to be the encrypted result
 */
 module bombe (
   output [7:0] bombe_out,
+  output [3:0] state_out,
+  output rotor_clk_out,
   input  [7:0] char_in,
   input  key_press,    // HOW
   input  go,            // start deduction
@@ -33,6 +35,7 @@ module bombe (
     .load_s1(load_reg[1]),
     .load_s2(load_reg[2]),
     .rotor_enable(rotor_en),
+	 .TEMP_STATE(state_out),
     .reset(reset),
     .key_press(key_press),
     .go(go),
@@ -40,13 +43,15 @@ module bombe (
     .control_clk(clk)
     );
 
-  and(inhibited_clk, rotor_en, CLOCK_50);
+  assign inhibited_clk = clk & rotor_en; // these are both single bit
 
-  rate_divider_quarter_second divider(
+  rate_divider_quarter_second divider( // works
     .clk_out(rotor_clk),
     .clk_in(inhibited_clk)
   );
 
+  assign rotor_clk_out = rotor_en;
+  
   bombe_datapath bombe_datapath(
     .bombe_out(bombe_out),
     .arithmetic_end(arithmetic_end),
@@ -74,6 +79,7 @@ module bombe_control (
   output reg load_s1,                       // '' second ''
   output reg load_s2,                       // '' third ''
   output reg rotor_enable,                  // enabler for rotor increment.
+  output reg [3:0] TEMP_STATE,
   input reset,                              // async reset
   input key_press,                          // indicator bit for user pressing bit.
   input go,                                 // indicator bit for user starting bombe.
@@ -167,7 +173,8 @@ module bombe_control (
   // SWITCH TO NEXT STATE
   always @ ( posedge control_clk ) begin: state_transition
     // check for reset here for async reset?
-    current_state <= next_state;
+    current_state = next_state;
+	 TEMP_STATE = current_state;
   end
 endmodule //bombe_control
 
@@ -247,7 +254,7 @@ module bombe_datapath (
 
   // DEDUCT
   // clocked rotor
-  clocked_rotor_0_25(
+  clocked_rotor_0_25 rot(
     .rotor_out(rotor_out),
     .increment(rotor_enable),       // see NANDed portion in diagram
     .load(reset),                   // note connection to total reset
@@ -259,12 +266,12 @@ module bombe_datapath (
   // values
   assign x_0 = rotor_out; //+ ZERO;
 
-  value_wrapper_0_25(
+  value_wrapper_0_25 vw_0(
       .wrapped_val(x_1),
       .val(rotor_out + ONE)
   );
 
-  value_wrapper_0_25(
+  value_wrapper_0_25 vw_1(
       .wrapped_val(x_2),
       .val(rotor_out + TWO)
   );
@@ -315,9 +322,9 @@ module bombe_datapath (
   // we have matched the sequence iff equality passes.
   assign matched_sequence = &R;
   assign rotor_end = rotor_out == ROTOR_MAX;
-  and(result_mux_select, rotor_end, ~matched_sequence);
+  assign result_mux_select = rotor_end & ~matched_sequence;
 
-  mux2to1(
+  mux2to1 result_mux(
     .x(rotor_out),
     .y(ERROR_VAL),
     .s(result_mux_select),
@@ -326,6 +333,6 @@ module bombe_datapath (
 
   // OUTPUT ASSIGNMENTS
   // end flag
-  or(arithmetic_end, matched_sequence, rotor_end);
+  assign arithmetic_end = matched_sequence | rotor_end;
 
 endmodule //bombe_datapath
