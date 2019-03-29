@@ -134,11 +134,13 @@ module Enigma(
 	wire global_clk = CLOCK_50;
 	wire reset = SW[17];
 
+	wire [23:0] char_registers;
+	
 	bombe bom(
 		.bombe_out(bombe_out),
 		.char_in(char_in),
-		.state_out(LEDR[4:0]),
 		.rotor_clk_out(LEDR[17]),
+		.char_reg(char_registers),
 		.key_press(key_down),
 		.go(start_deduct),
 		.clk(CLOCK_50),
@@ -167,6 +169,8 @@ module Enigma(
 		.OUT(HEX5)
 	);
 	
+	assign LEDR[16:0] = char_registers[22:7];
+	assign LEDG = char_registers[6:0];
 	
 	/*
 	assign LEDR[17] = ~KEY[0];

@@ -18,12 +18,12 @@ module ascii_reg (
   localparam CHAR_A = 8'h41; // see ascii decoder for ASIC-- notepad.
   localparam ON = 1'b1;
 
-  always @ (posedge reset or posedge load)
+  always @ (*)
   begin: load_reset
     // check if reset
     if (reset == ON)
       S = CHAR_A;
-    else
+    else if (load == ON)
       S = letter; // load must have triggered this.
   end // load_reset
   

@@ -14,7 +14,7 @@ NOTE: These flag characters <S0, S1, S2> are assumed to be the encrypted result
 */
 module bombe(
   output [7:0] bombe_out,
-  output [3:0] state_out,
+  output [23:0] char_reg,
   output rotor_clk_out,
   input  [7:0] char_in,
   input  key_press,    // HOW
@@ -50,17 +50,19 @@ module bombe(
     .clk_in(inhibited_clk)
   );
 
-  assign rotor_clk_out = rotor_en;
+  assign rotor_clk_out = load_reg[0];
   
   bombe_datapath bombe_datapath(
     .bombe_out(bombe_out),
     .arithmetic_end(arithmetic_end),
     .char(char_in),
+	 .char_reg(char_reg),
     .load_s0(load_reg[0]),
     .load_s1(load_reg[1]),
     .load_s2(load_reg[2]),
     .reset(circuit_reset),
     .rotor_enable(rotor_en),
+	 //.match(rotor_clk_out),
     .rotor_clk(rotor_clk)
   );
 
@@ -181,6 +183,8 @@ endmodule //bombe_control
 module bombe_datapath (
   output [7:0] bombe_out,
   output arithmetic_end,
+  output match,
+  output [23:0] char_reg,
   input [7:0] char,
   input load_s0,
   input load_s1,
@@ -230,28 +234,28 @@ module bombe_datapath (
 
   // LOAD
   // registers
-  ascii_reg s1(
+  ascii_reg s0(
     .S(enc_s0),
     .load(load_s0),
     .reset(reset),
     .letter(char)
   );
 
-  ascii_reg s2(
+  ascii_reg s1(
     .S(enc_s1),
     .load(load_s1),
     .reset(reset),
     .letter(char)
   );
 
-  ascii_reg s3(
+  ascii_reg s2(
     .S(enc_s2),
     .load(load_s2),
     .reset(reset),
     .letter(char)
   );
 
-
+	assign char_reg = {enc_s2, enc_s1, enc_s0};
   // DEDUCT
   // clocked rotor
   clocked_rotor_0_25 rot(
@@ -334,5 +338,5 @@ module bombe_datapath (
   // OUTPUT ASSIGNMENTS
   // end flag
   assign arithmetic_end = matched_sequence | rotor_end;
-
+  assign match = matched_sequence;
 endmodule //bombe_datapath
