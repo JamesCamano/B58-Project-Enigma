@@ -38,7 +38,7 @@ module bombe_control (
   input reset,                          // async reset
   input key_press,                      // indicator bit for user pressing bit.
   input go,                             // indicator bit for user starting bombe.
-  input arithmetic_end                  // indicator bit for deduction success/failure.
+  input arithmetic_end,                 // indicator bit for deduction success/failure.
   input control_clk;                    // clock for control circuit.
   );
 
@@ -76,6 +76,7 @@ module bombe_control (
   localparam LOAD_S2_WAIT   = 4'd5;
 
   // process start / continue
+  localparam DECUCT_WAIT    = 4'd10;
   localparam DEDUCT         = 4'd6;   // main functionality state.
 
   // end/reset
@@ -93,7 +94,8 @@ module bombe_control (
         LOAD_S1:        next_state = key_press ? LOAD_S1_WAIT : LOAD_S1;
         LOAD_S1_WAIT    next_state = key_press ? LOAD_S1_WAIT : LOAD_S2;
         LOAD_S2:        next_state = key_press ? LOAD_S2_WAIT : LOAD_S2;
-        LOAD_S2_WAIT    next_state = key_press ? LOAD_S2_WAIT : DEDUCT;     // Begin deducing after this key press goes low.
+        LOAD_S2_WAIT    next_state = key_press ? LOAD_S2_WAIT : DEDUCT_WAIT;// Begin deducing after this key press goes low.
+        DEDUCT_WAIT     next_state = go        ? DEDUCT: DEDUCT_WAIT;
         DEDUCT          next_state = arithmetic_end ? PROCESS_END: DEDUCT;  // Until we get the arithmetic_end flag, keep on deducing.
         PROCESS_END     next_state = reset ? RESET : PROCESS_END;           // stay in process end state until user explicitly wants to reset.
         RESET:          next_state = RESET_WAIT;
