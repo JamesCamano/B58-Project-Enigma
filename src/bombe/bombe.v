@@ -17,7 +17,7 @@ module bombe(
   output [23:0] char_reg,
   output rotor_clk_out,
   input  [7:0] char_in,
-  input  key_press,    // HOW
+  input  key_press,    
   input  go,            // start deduction
   input clk,            // assume CLOCK_50
   input reset);

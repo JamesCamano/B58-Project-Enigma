@@ -3,7 +3,7 @@
 /*
 Represents the Enigma Machine.
 */
-module enigma_circuit(
+module enigma(
   output [7:0] letter_out,
   output [7:0] TEMP_NTCS,			// Debugging
   output TEMP_WRAP,					// Debugging
