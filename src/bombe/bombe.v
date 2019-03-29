@@ -14,11 +14,50 @@ NOTE: These flag characters <S0, S1, S2> are assumed to be the encrypted result
 */
 module bombe (
   output [7:0] bombe_out,
-  input [7:0] char_in,
+  input  [7:0] char_in,
+  input  key_press;     // HOW
+  input  go;            // start deduction
   input clk;            // assume CLOCK_50
   input reset);
 
-  
+  wire circuit_reset;
+  wire [2:0] load_reg;
+  wire rotor_en;
+  wire arithmetic_end;
+  wire rotor_clk;
+  wire inhibited_clk; // used to toggle clk_50
+
+  bombe_control fsm(
+    .reset_to_beginning(circuit_reset),
+    .load_s0(load_reg[0]),
+    .load_s1(load_reg[1]),
+    .load_s2(load_reg[2]),
+    .rotor_enable(rotor_en),
+    .reset(reset),
+    .key_press(key_press),
+    .go(go),
+    .arithmetic_end(arithmetic_end),
+    .control_clk(clk)
+    );
+
+  and(inhibited_clk, rotor_en, CLOCK_50);
+
+  rate_divider_quarter_second divider(
+    .clk_out(rotor_clk),
+    .clk_in(inhibited_clk)
+  );
+
+  bombe_datapath bombe_datapath(
+    .bombe_out(bombe_out),
+    .arithmetic_end(arithmetic_end),
+    .char(char_in),
+    .load_s0(load_reg[0]),
+    .load_s1(load_reg[1]),
+    .load_s2(load_reg[2]),
+    .reset(circuit_reset),
+    .rotor_enable(rotor_en),
+    .rotor_clk(rotor_clk)
+  );
 
 endmodule // bombe
 
@@ -137,7 +176,7 @@ module bombe_datapath (
   output arithmetic_end,
   input [7:0] char,
   input load_s0,
-  input LOAD_S1,
+  input load_s1,
   input load_s2,
   input reset,
   input rotor_enable,
