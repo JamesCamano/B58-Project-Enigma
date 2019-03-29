@@ -126,7 +126,7 @@ module Enigma(
 	assign LEDR = NTCS;
 	*/
 
-	/*
+
 	wire [7:0] bombe_out;
 	wire [7:0] char_in = SW[7:0];
 	wire key_down = key_pressed;	 // active low
@@ -137,7 +137,7 @@ module Enigma(
 	bombe bom(
 		.bombe_out(bombe_out),
 		.char_in(char_in),
-		.state_out(LEDR[3:0]),
+		.state_out(LEDR[4:0]),
 		.rotor_clk_out(LEDR[17]),
 		.key_press(key_down),
 		.go(start_deduct),
@@ -166,16 +166,22 @@ module Enigma(
 		.IN(char_in[7:4]),
 		.OUT(HEX5)
 	);
-	*/
+	
+	
+	/*
+	assign LEDR[17] = ~KEY[0];
+	assign increment = SW[17];
+	assign load = SW[16];
+	assign init_state = SW[4:0];
 	
 	clocked_rotor_0_25 r(
 		.rotor_out(LEDR[7:0]),
 		.current_state(LEDG[2:0]),
-		.increment(1'b1),
-		.load(1'b0),
-		.rotor_init_state(4'd0),
+		.increment(increment),
+		.load(load),
+		.rotor_init_state(init_state),
 		.clk(~KEY[0])
 	);
-	
+	*/
 
 endmodule

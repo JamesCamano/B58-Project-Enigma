@@ -28,10 +28,10 @@ module clocked_rotor_0_25(
     .clk(clk),
     .reset(load)
   );
-
+  
   clocked_rotor_datapath datapath(
     .rotor_out(rotor_out),
-    .key_release(key_release),
+    .key_release(key_released),
     .reset_state(reset_state),
     .rotor_init_state(rotor_init_state)
   );
@@ -60,7 +60,7 @@ module clocked_rotor_FSM(
   reg [2:0] current_state;  // 3-bit state register
   reg [2:0] next_state;
 
-  always @( posedge clk or posedge reset ) begin: state_table
+  always @( * ) begin: state_table
     case(current_state) // always go to reset if it is on, otherwise, just bounce
       SAVE_VALUE:       next_state = reset ? RESET_ROTOR : CHECK_VALUE;
       CHECK_VALUE:      next_state = reset ? RESET_ROTOR : SAVE_VALUE;
@@ -70,10 +70,12 @@ module clocked_rotor_FSM(
   end // state_table
 
   // querying the current state
-  always @ ( posedge clk or posedge reset ) begin: query_state
+  always @ ( * ) 
+  begin: query_state
     key_release = OFF;
     reset_state = OFF;
 	 temp_current_state = current_state;
+	 
     case(current_state)
       SAVE_VALUE:       key_release = ON;   // release the key
       CHECK_VALUE:      key_release = OFF;  // press the key
@@ -82,9 +84,13 @@ module clocked_rotor_FSM(
   end // query_state
 
   
-	always @ ( posedge clk or posedge reset ) begin: state_transition
-		current_state = next_state;
-	end // 
+	always @ ( posedge clk or posedge reset) 
+	begin: state_transition	// why does changing this 
+		if (reset)
+			current_state = RESET_ROTOR;
+		else
+			current_state = next_state;
+	end // state_transition
   
 endmodule
 

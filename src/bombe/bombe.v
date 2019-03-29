@@ -12,7 +12,7 @@ NOTE: These flag characters <S0, S1, S2> are assumed to be the encrypted result
  of the sequence <A, B, C>.
 
 */
-module bombe (
+module bombe(
   output [7:0] bombe_out,
   output [3:0] state_out,
   output rotor_clk_out,
@@ -324,7 +324,7 @@ module bombe_datapath (
   assign rotor_end = rotor_out == ROTOR_MAX;
   assign result_mux_select = rotor_end & ~matched_sequence;
 
-  mux2to1 result_mux(
+  mux2to1_eight_bit result_mux(
     .x(rotor_out),
     .y(ERROR_VAL),
     .s(result_mux_select),

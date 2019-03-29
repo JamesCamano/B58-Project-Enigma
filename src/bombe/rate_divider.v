@@ -14,12 +14,12 @@ module rate_divider_quarter_second (
 
   localparam START_VAL = 1'd0;
 
-  reg [24:0] counter;
+  reg [23:0] counter;
 
   always @ (posedge clk_in) begin
     counter = counter + 1'b1;
   end
 
-  assign clk_out = counter[24] == START_VAL;
+  assign clk_out = counter[23] == START_VAL;
 
 endmodule //rate_divider
