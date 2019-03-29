@@ -38,6 +38,7 @@ module bombe_control (
   input key_press,                      // indicator bit for user pressing bit.
   input go,                             // indicator bit for user starting bombe.
   input arithmetic_end                  // indicator bit for deduction success/failure.
+  input control_clk;                    // clock for control circuit.
   );
 
   /* STATES:
@@ -57,6 +58,10 @@ module bombe_control (
   // STATE REGISTERS
   reg [2:0] current_state;
   reg [2:0] next_state;
+
+  // convenient parameters
+  localparam  ON = 1'b1;
+  localparam  OFF = 1'b0;
 
   // STATES
   // load
@@ -79,6 +84,7 @@ module bombe_control (
 
   // QUERY CURRENT STATE AND CHOOSE NEXT STATE
   // TODO: reset stages for load.
+  // Note, we can do begin/end statements within cases - see poly_function.v line 157.
   always @ ( * ) begin: state_table                                         // when ANYTHING changes, check the state table.
     case (current_state)
         LOAD_S1:        next_state = key_press ? LOAD_S1_WAIT : LOAD_S1;    // loop in LOAD_S1 until key_press is high.
@@ -91,15 +97,36 @@ module bombe_control (
         PROCESS_END     next_state = reset ? RESET : PROCESS_END;           // stay in process end state until user explicitly wants to reset.
         RESET:          next_state = RESET_WAIT;
         RESET_WAIT:     next_state = reset ? RESET_WAIT : LOAD_S1;          // loop in reset_wait state until reset is low.
-      default: next_state = RESET;
+      default: next_state = RESET;                                          // default to reset so that we can assure that everything has correct starting values.
     endcase
   end // state_table
 
 
   // QUERY CURRENT STATE TO DEFINE CONTROL BITS
+  always @ ( * ) begin: enable_signals
+    // note: setting every bit to off assumes preserving state.
+    reset_to_beginning = OFF;
+    load_s1 = OFF;
+    load_s2 = OFF;
+    load_s3 = OFF;
+    rotor_enable = OFF;
+
+    case (current_state)
+      LOAD_S1:    load_s1 = ON;
+      LOAD_S2:    load_s2 = ON;
+      LOAD_S3:    load_s3 = ON;
+      DEDUCT:     rotor_enable = ON;        // enable the rotor so that we may deduce values.
+      RESET:      reset_to_beginning = ON;
+      RESET_WAIT: reset_to_beginning = ON; // keep the reset on for safety.
+      //default: ;                         // default means that we just preserve state. This will be in all wait states.
+    endcase
+  end // enable_signals
 
   // SWITCH TO NEXT STATE
-
+  always @ ( posedge clk ) begin: state_transition
+    // check for reset here for async reset?
+    current_state <= next_state;
+  end
 endmodule //bombe_control
 
 module bombe_datapath (
@@ -111,7 +138,8 @@ module bombe_datapath (
   input load_s3,
   input reset,
   input rotor_enable,
-  input clk);
+  input rotor_clk       // clock for rotor.
+  );
 
 
 
