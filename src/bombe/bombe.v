@@ -20,9 +20,9 @@ module bombe (
   input clk;            // assume CLOCK_50
   input reset);
 
-  wire circuit_reset;
-  wire [2:0] load_reg;
-  wire rotor_en;
+  wire circuit_reset;  // flag for resetting circuit
+  wire [2:0] load_reg; // 3-bit flag to dictate which register is loaded.
+  wire rotor_en;       //
   wire arithmetic_end;
   wire rotor_clk;
   wire inhibited_clk; // used to toggle clk_50
@@ -69,16 +69,16 @@ endmodule // bombe
     - 4. Success/Failure.
  */
 module bombe_control (
-  output reset_to_beginning,            // reset to start
-  output load_s0,                       // load first ascii reg.
-  output load_s1,                       // '' second ''
-  output load_s2,                       // '' third ''
-  output rotor_enable,                  // enabler for rotor increment.
-  input reset,                          // async reset
-  input key_press,                      // indicator bit for user pressing bit.
-  input go,                             // indicator bit for user starting bombe.
-  input arithmetic_end,                 // indicator bit for deduction success/failure.
-  input control_clk;                    // clock for control circuit.
+  output reg reset_to_beginning,            // reset to start
+  output reg load_s0,                       // load first ascii reg.
+  output reg load_s1,                       // '' second ''
+  output reg load_s2,                       // '' third ''
+  output reg rotor_enable,                  // enabler for rotor increment.
+  input reset,                              // async reset
+  input key_press,                          // indicator bit for user pressing bit.
+  input go,                                 // indicator bit for user starting bombe.
+  input arithmetic_end,                     // indicator bit for deduction success/failure.
+  input control_clk;                        // clock for control circuit.
   );
 
   /* STATES:
@@ -134,7 +134,7 @@ module bombe_control (
         LOAD_S1_WAIT    next_state = key_press ? LOAD_S1_WAIT : LOAD_S2;
         LOAD_S2:        next_state = key_press ? LOAD_S2_WAIT : LOAD_S2;
         LOAD_S2_WAIT    next_state = key_press ? LOAD_S2_WAIT : DEDUCT_WAIT;// Begin deducing after this key press goes low.
-        DEDUCT_WAIT     next_state = go        ? DEDUCT: DEDUCT_WAIT;
+        DEDUCT_WAIT     next_state = go        ? DEDUCT : DEDUCT_WAIT;
         DEDUCT          next_state = arithmetic_end ? PROCESS_END: DEDUCT;  // Until we get the arithmetic_end flag, keep on deducing.
         PROCESS_END     next_state = reset ? RESET : PROCESS_END;           // stay in process end state until user explicitly wants to reset.
         RESET:          next_state = RESET_WAIT;
@@ -160,7 +160,7 @@ module bombe_control (
       DEDUCT:     rotor_enable = ON;        // enable the rotor so that we may deduce values.
       RESET:      reset_to_beginning = ON;
       RESET_WAIT: reset_to_beginning = ON; // keep the reset on for safety.
-      //default: ;                         // default means that we just preserve state. This will be in all wait states.
+      //default: ;                         // default means that we just preserve state. This will be in all wait states (except RESET_WAIT).
     endcase
   end // enable_signals
 

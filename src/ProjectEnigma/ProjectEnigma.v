@@ -72,12 +72,13 @@ module main(
 
 */
 
+/* ENIGMA testing
 	wire [7:0] enigma_out;
 	wire [7:0] rotor_out;
 	wire TEMP_WRAP;
-	
+
 	wire [7:0] NTCS;
-	
+
 	hex_display input_val_low(
 		.IN(SW[3:0]),
 		.OUT(HEX4)
@@ -87,8 +88,8 @@ module main(
 		.IN(SW[7:4]),
 		.OUT(HEX5)
 	);
-	
-	
+
+
 	hex_display output_val_low(
 		.IN(NTCS[3:0]),
 		.OUT(HEX6)
@@ -98,17 +99,17 @@ module main(
 		.IN(NTCS[7:4]),
 		.OUT(HEX7)
 	);
-	
+
 	hex_display rotor_out_low(
 		.IN(rotor_out[3:0]),
 		.OUT(HEX0)
 	);
-	
+
 	hex_display rotor_out_high(
 		.IN(rotor_out[7:4]),
 		.OUT(HEX1)
 	);
-	
+
 	enigma eni(
 		.letter_out(enigma_out),
 		.TEMP_WRAP(TEMP_WRAP),
@@ -120,9 +121,47 @@ module main(
 		.rotor_init_state(SW[15:11]),
 		.load_init_state(SW[10])
 	);
-	
+
 	assign LEDG[0] = TEMP_WRAP;
 	assign LEDR = NTCS;
-	
+	*/
+
+	wire [7:0] bombe_out;
+	wire [7:0] char_in = SW[7:0];
+	wire key_down = key_pressed;	 // active low
+	wire start_deduct = ~KEY[0];
+	wire global_clk = CLOCK_50;
+	wire reset = SW[17];
+
+	bombe bom(
+		.bombe_out(bombe_out),
+		.char_in(char_in),
+		.key_press(key_down),
+		.go(start_deduct),
+		.clk(CLOCK_50),
+		.reset(reset)
+	);
+
+	// output
+	hex_display bombe_out_low(
+		.IN(bombe_out[3:0]),
+		.OUT(HEX0)
+	);
+
+	hex_display bombe_out_high(
+		.IN(bombe_out[7:4]),
+		.OUT(HEX1)
+	);
+
+
+	hex_display input_val_low(
+		.IN(char_in[3:0]),
+		.OUT(HEX4)
+	);
+
+		hex_display input_val_high(
+		.IN(char_in[7:4]),
+		.OUT(HEX5)
+	);
 
 endmodule
