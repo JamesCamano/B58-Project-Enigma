@@ -20,8 +20,7 @@ output [6:0]HEXN
 
 
 // main project file
-module Enigma
-    (
+module Enigma (
         input PS2_KBCLK,                            // Keyboard clock
         input PS2_KBDAT,                            // Keyboard input data
         input CLOCK_50,                             //    On Board 50 MHz
@@ -157,6 +156,7 @@ module Enigma
   assign user_pressed_key = load_char_transfer && is_valid_ascii;
 
   // ENIGMA SPACE - comment out when done
+
 	// ENIGMA: the encrypted ascii value.
   wire [7:0] enigma_out;  // the output of enigma. Persists until the next keypress.
 
@@ -180,7 +180,7 @@ module Enigma
 
 
 // BOMBE SPACE  - comment out when done.
-  /*
+/*
   // bombe machine
   wire [7:0] bombe_result; // 8-bit ouput of bombe machine
   wire flag_deduct_go;  // deduction flag.
@@ -199,8 +199,9 @@ module Enigma
 		.reset(flag_reset)
 	);
 
-  assign SW[7:0] = bombe_result;
+  assign LEDR[7:0] = bombe_result;
   */
+
 // END OF BOMBE SPACE - comment out when done.
 
 // DEBUG SPACE
@@ -900,4 +901,3 @@ module Enigma_test(
 	*/
 
 endmodule
-
