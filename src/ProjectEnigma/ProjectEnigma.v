@@ -19,17 +19,14 @@ output [6:0]HEXN
 */
 
 
-
-
-
-
+// main project file
 module Enigma
     (
         input PS2_KBCLK,                            // Keyboard clock
         input PS2_KBDAT,                            // Keyboard input data
         input CLOCK_50,                             //    On Board 50 MHz
         input [1:0] KEY,                            // Reset key
-		  input [17:0] SW,					
+		  input [17:0] SW,
         // The ports below are for the VGA output.  Do not change.
         output VGA_CLK,                             //    VGA Clock
         output VGA_HS,                              //    VGA H_SYNC
@@ -50,7 +47,7 @@ module Enigma
 		  output [17:0]LEDR
     );
 /*
-	 
+
 	hex_display h0(
 	       .IN(pixel_counter_transfer[3:0]),
 	       .OUT(HEX0)
@@ -64,7 +61,7 @@ module Enigma
 	       .OUT(HEX2)
 	);
 */
-	 
+
     wire resetn;
     assign resetn = KEY[0];
 
@@ -85,7 +82,7 @@ module Enigma
     wire [3:0] cursor_pixel_counter_transfer;
     wire [3:0] y_load;
     wire y_parallel;
-    wire inc_pixel_counter_transfer, dec_x_pos_counter_transfer, inc_x_pos_counter_transfer, 
+    wire inc_pixel_counter_transfer, dec_x_pos_counter_transfer, inc_x_pos_counter_transfer,
         inc_y_pos_counter_transfer, dec_y_pos_counter_transfer, inc_line_pos_counter_transfer,
         dec_line_pos_counter_transfer;
     wire reset_pixel_counter_transfer, reset_x_pos_counter_transfer, reset_y_pos_counter_transfer,
@@ -135,60 +132,106 @@ module Enigma
             .letter_case_out(kb_letter_case)
         );
 
-    key2ascii SC2A    
+    key2ascii SC2A
         (
             .ascii_code(ASCII_value),
             .scan_code(kb_scan_code),
             .letter_case(kb_letter_case)
         );
-		  
-	// ENIGMA: THE NEW ASCII VALUE FROM INJECTION
-	wire [7:0] new_ascii;
-	
+
+  // PROJECT_ENIGMA SPACE.
+  // This space is designated for 'global' entities that are relevant to both the Enigma machine and
+  //  the bombe machine.
+  // convenient constants
+  localparam ORD_A = 8'h41;
+  localparam ORD_Z = 8'h5A;
+  localparam NULL_CHAR = 8'h0;
+
+  wire user_pressed_key;  // a flag to signal that the user has pressed a key on the keyboard.
+  wire is_valid_ascii;    // a bit flag to signal that we are in the correct character range.
+  wire [7:0] new_ascii;   // a 8-bit representation of an ascii value. This will be used to transfer encrypted
+                          //  values from Enigma (given correct input), or transfer regular input given to the Nombe,
+                          //  to the monitor (given correct input.)
+
+  assign is_valid_ascii   = ASCII_value <= ORD_Z && ASCII_value >= ORD_A;
+  assign user_pressed_key = load_char_transfer && is_valid_ascii;
+
+  // ENIGMA SPACE - comment out when done
+	// ENIGMA: the encrypted ascii value.
+  wire [7:0] enigma_out;  // the output of enigma. Persists until the next keypress.
+
+  wire flag_encrypt                   = SW[17];
+  wire flag_load_init_state           = SW[16];
+  wire [3:0] rotor_init_state_setting = SW[3:0];
+
+
+  assign new_ascii = is_valid_ascii ? enigma_out : NULL_CHAR; // default to the null character if we do not have a valid ascii value.
+
+	// instantiate enigma machine
+	enigma eni(
+		.letter_out(enigma_out),
+		.encrypt(flag_encrypt),
+		.char_input(ASCII_value),
+		.char_pressed(load_char_transfer),  // load_char_transfer is our signal that the user has pressed a key.
+		.rotor_init_state(rotor_init_state_setting),
+		.load_init_state(flag_load_init_state)
+	);
+// END OF ENIGMA SPACE - comment out when done.
+
+
+// BOMBE SPACE  - comment out when done.
+  /*
+  // bombe machine
+  wire [7:0] bombe_result; // 8-bit ouput of bombe machine
+  wire flag_deduct_go;  // deduction flag.
+  wire flag_reset;      // reset flag.
+
+  assign flag_deduct_go = ~KEY[1];
+  assign flag_reset = SW[17];
+
+  assign new_ascii = is_valid_ascii ? ASCII_value : NULL_CHAR;
+	bombe bom(
+		.bombe_out(bombe_result),
+		.char_in(ASCII_value),
+		.go(flag_deduct_go),
+    .key_press(load_char_transfer),
+		.clk(CLOCK_50),
+		.reset(flag_reset)
+	);
+
+  assign SW[7:0] = bombe_result;
+  */
+// END OF BOMBE SPACE - comment out when done.
+
+// DEBUG SPACE
+
 	hex_display ascii_low(
 	       .IN(ASCII_value[3:0]),
 	       .OUT(HEX4)
 	);
-	
+
 	hex_display ascii_high(
 	       .IN(ASCII_value[7:4]),
 	       .OUT(HEX5)
 	);
-	
-	
+
+
 	hex_display new_ascii_low(
 	       .IN(new_ascii[3:0]),
 	       .OUT(HEX6)
 	);
-	
-	
+
+
 	hex_display new_ascii_high(
 	       .IN(new_ascii[7:4]),
 	       .OUT(HEX7)
 	);
-	
-	
-	// instatiate enigma machine
-	/*
-	enigma eni(
-		.letter_out(new_ascii),
-		.encrypt(SW[17]),
-		.char_input(ASCII_value),
-		.char_pressed(load_char_transfer),// load_char_transfer is our signal that the user has pressed something.
-		.rotor_init_state(SW[3:0]),
-		.load_init_state(SW[16])
-	);
-	*/
-	
-	// bombe machine - FIX THIS
-	bombe bom(
-		.bombe_out(LEDR[7:0]),
-		.char_in(ASCII_value),
-		.go(~KEY[1]),
-		.clk(CLOCK_50),
-		.reset(SW[17])
-	);
-	
+// END OF DEBUG SPACE
+
+// END OF PROJECT_ENIGMA SPACE
+
+
+
    // Instantiate datapath
     datapath d0
         (
@@ -222,7 +265,7 @@ module Enigma
             .line_load(line_load),
             .line_parallel(line_parallel),
             .reset_line_pos_counter(reset_line_pos_counter_transfer),
-            .letter_in(ASCII_value),
+            .letter_in(new_ascii),
             .shift_for_cursor(shift_for_cursor_transfer)
         );
 
@@ -258,7 +301,7 @@ module Enigma
             .x_pos_counter_in(x_pos_counter_transfer),
             .y_pos_counter_in(y_pos_counter_transfer),
             .line_pos_counter_in(line_pos_counter_transfer),
-            .ascii_code(ASCII_value)
+            .ascii_code(new_ascii)
         );
 endmodule
 
@@ -315,9 +358,9 @@ module datapath
     // Instantiate relative pixel position pixel_counter
     counter_8bit pxcnt0
         (
-            .Q_OUT(pixel_counter), 
-            .EN(inc_pixel_counter), 
-            .CLK(clk), 
+            .Q_OUT(pixel_counter),
+            .EN(inc_pixel_counter),
+            .CLK(clk),
             .CLR(reset_pixel_counter)
         );
 
@@ -388,7 +431,7 @@ module datapath
 endmodule
 
 module control_FSM(
-        output reg plot, 
+        output reg plot,
         output reg load_char,
         output reg inc_pixel_counter,
         output reg reset_pixel_counter,
@@ -507,14 +550,14 @@ module control_FSM(
             S_PLOT_CURSOR_WAIT:     next_state = char_ready ? S_CHECK_CHAR : S_CURSOR_INC;
 
             S_CURSOR_INC:           next_state = char_ready ? S_CHECK_CHAR : S_CURSOR_INC_WAIT;
-            S_CURSOR_INC_WAIT:      next_state = char_ready ? S_CHECK_CHAR : 
+            S_CURSOR_INC_WAIT:      next_state = char_ready ? S_CHECK_CHAR :
                 ( (cursor_pixel_counter <= MAX_CURSOR_W) ? S_PLOT_CURSOR : S_FLIP_CURSOR_COLOUR );
 
             S_FLIP_CURSOR_COLOUR:   next_state = char_ready ? S_CHECK_CHAR : S_CURSOR_WAIT;
             S_CURSOR_WAIT:          next_state = (char_ready || control_char) ? S_CHECK_CHAR :
                 (half_hz_clock ? S_PLOT_CURSOR : S_CURSOR_WAIT);
 
-            S_CHECK_CHAR:   
+            S_CHECK_CHAR:
                         begin
                             if (ascii_code > 7'h1F && ascii_code < 7'h7F) // if a printing char
                             begin
@@ -535,7 +578,7 @@ module control_FSM(
                                     ENTER:      next_state = S_START_NEXT_LINE;
                                     DELETE:     next_state = S_DELETE;
                                     default:    next_state = S_PLOT_CURSOR;
-                                endcase    
+                                endcase
                             end
                             else // if control character is pressed, before clearing cursor
                             begin
@@ -549,7 +592,7 @@ module control_FSM(
             S_PLOT_PIXEL:           next_state = S_PLOT_WAIT;
             S_PLOT_WAIT:            next_state = S_INC_PIXEL;
             S_INC_PIXEL:            next_state = S_INC_PIXEL_WAIT;
-            S_INC_PIXEL_WAIT:       next_state = (pixel_counter_in <= CHAR_SIZE) ? S_PLOT_PIXEL : 
+            S_INC_PIXEL_WAIT:       next_state = (pixel_counter_in <= CHAR_SIZE) ? S_PLOT_PIXEL :
                 ( ((backspace == 1'b1) || (delete == 1'b1)) ? S_INC_PIXEL_POST : S_INC_X_POS_PRE );
 				S_INC_PIXEL_POST: 		next_state = S_PLOT_CURSOR;
 
@@ -803,7 +846,7 @@ module Enigma_test(
 	wire reset = SW[17];
 
 	wire [23:0] char_registers;
-	
+
 	bombe bom(
 		.bombe_out(bombe_out),
 		.char_in(char_in),
@@ -836,16 +879,16 @@ module Enigma_test(
 		.IN(char_in[7:4]),
 		.OUT(HEX5)
 	);
-	
+
 	assign LEDR[16:0] = char_registers[22:7];
 	assign LEDG = char_registers[6:0];
-	
+
 	/*
 	assign LEDR[17] = ~KEY[0];
 	assign increment = SW[17];
 	assign load = SW[16];
 	assign init_state = SW[4:0];
-	
+
 	clocked_rotor_0_25 r(
 		.rotor_out(LEDR[7:0]),
 		.current_state(LEDG[2:0]),
@@ -857,4 +900,4 @@ module Enigma_test(
 	*/
 
 endmodule
-*/
+
