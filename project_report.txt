@@ -147,6 +147,10 @@ WEEK 2:
 		- Did not get to connecting keyboard I/O to VGA.
 		- Did not get to starting to implement Bombe machine in Verilog.
 
+WEEK 3:
+	- What Worked
+		- Fixed the components of Enigma and Bombe.
+		- Synchronized Enigma and Bombe with ASIC Notepad-- datalines.
 
 References
 ----------
