@@ -47,10 +47,10 @@
 	
 	\newcommand{\fhat}{\hat{f}}	
 	
-	\begin{flalign}
+	\begin{flalign}	
 		\fhat(s_0, R) &= A  \\
 		\fhat(s_1, g(R)) &= B  \\
-		\fhat(s_2, g(g(R))) &= C
+		\fhat(s_2, g(g(R))) &= C \\
 	\end{flalign}
 	
 	This comes from the fact that we have constrained any message of the enigma machine to be encrypted with the prefix ``ABC".
@@ -125,7 +125,17 @@
 	\end{algorithm}
 
 	\section{Justification for the Algorithm}
+	Obviously, this algorithm is heavily inspired by the realization that known repeated words like \emph{Wetterbericht} (Weather Report) were used to deduce the Enigma code (at least, for that day.) \\
+
+
+	This justification relies on the fact that for a specific rotor configuration $R = (m, n)$, the sequence $\langle f(A, R), f(B, g(R)), f(C, g(g(R))) \rangle$ is unique for each configuration R (this is immediately obvious if one is to consider $f(A, R)$). \\
+
+Thus, if one assumes a correct Enigma message, then one may deduce the rotor value inital $n \in \{ 0, 1, \ldots , 25 \}$ by finding such $n$ that satisfies that in the decryption requirements. \\
+ 
+ The message constraints that requre the message to be appended with an extra encrypted $B$ and $C$ could be interpreted as ``insurance letters": knowing that the first three letters are what you expect is better than having only one.
+
 	
+
 	\section{Additional Notes}	
 	
 \end{document}
