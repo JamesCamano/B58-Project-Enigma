@@ -169,6 +169,6 @@ Repo & Video
 <At the end of the project, provide links to your code repository and presentation video (and passwords if not public>
 REPO: https://github.com/JamesCamano/B58-Project-Enigma.git
 
-EXTRA INFO (may or may not add to description):
-		- state changes with every input (extra complexity with developing enigma, bombe)
-		- no letter is ever mapped to itself
+VIDEO LINK: <link here>
+NOTE: the circuit description part of the video may sound a bit wierd. In this case I have included my script for this portion to read along below:
+https://github.com/JamesCamano/B58-Project-Enigma/blob/master/documentation/circuit_desc_script.pdf
